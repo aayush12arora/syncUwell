@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>CLIENT_ID</key>
+	<string>713174537653-u9jg9m3t0lpn8o3u81cuuhmgldcj8seh.apps.googleusercontent.com</string>
+	<key>REVERSED_CLIENT_ID</key>
+	<string>com.googleusercontent.apps.713174537653-u9jg9m3t0lpn8o3u81cuuhmgldcj8seh</string>
+	<key>API_KEY</key>
+	<string>AIzaSyBX4Vp_PZrwjujApDaJmQk3_RO0f23BHhc</string>
+	<key>GCM_SENDER_ID</key>
+	<string>713174537653</string>
+	<key>PLIST_VERSION</key>
+	<string>1</string>
+	<key>BUNDLE_ID</key>
+	<string>com.example.syncuwell</string>
+	<key>PROJECT_ID</key>
+	<string>syncuwell-93185</string>
+	<key>STORAGE_BUCKET</key>
+	<string>syncuwell-93185.appspot.com</string>
+	<key>IS_ADS_ENABLED</key>
+	<false></false>
+	<key>IS_ANALYTICS_ENABLED</key>
+	<false></false>
+	<key>IS_APPINVITE_ENABLED</key>
+	<true></true>
+	<key>IS_GCM_ENABLED</key>
+	<true></true>
+	<key>IS_SIGNIN_ENABLED</key>
+	<true></true>
+	<key>GOOGLE_APP_ID</key>
+	<string>1:713174537653:ios:3092008ffc77a5447ff5fc</string>
+</dict>
+</plist>

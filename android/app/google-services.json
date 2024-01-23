@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "713174537653",
+    "project_id": "syncuwell-93185",
+    "storage_bucket": "syncuwell-93185.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:713174537653:android:b1ce7112ee63c57f7ff5fc",
+        "android_client_info": {
+          "package_name": "com.example.syncuwell"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "713174537653-3bl55piqou8n7o5voeh25qh3hntkpqgu.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDpLZ1e7BITtO8ATeU9p57n0R1GALCkjUE"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "713174537653-3bl55piqou8n7o5voeh25qh3hntkpqgu.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
