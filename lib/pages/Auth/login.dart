@@ -28,10 +28,11 @@ class _LoginScreenState extends State<LoginScreen> {
   @override
   void initState() {
     super.initState();
+    getLoggedInStatus();
     flutterToast = FToast();
     // if you want to use context from globally instead of content we need to pass navigatorKey.currentContext!
     flutterToast.init(context);
-  getLoggedInStatus();
+
   }
 
 
@@ -111,8 +112,8 @@ class _LoginScreenState extends State<LoginScreen> {
 
       await  saveTimeTabletoLocalStorage(documentData);
 
-        String userName = documentData['name'];
-        print('User Name: $userName');
+        //String userName = documentData['name'];
+        //print('User Name: $userName');
 
         List<String> days = ['monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday', 'sunday'];
 
@@ -138,11 +139,11 @@ class _LoginScreenState extends State<LoginScreen> {
       loading= true;
     });
     SharedPreferences prefs = await SharedPreferences.getInstance();
-    bool status =prefs.getBool('LogedIn') ?? false;
+    bool status = prefs.getBool('LogedIn') ?? false;
     if(status){
       setState(() {
         Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)=>BottomNavigation(1)));
-        loading= false;
+
       });
 
     }else{

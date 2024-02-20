@@ -7,16 +7,16 @@ import 'package:syncuwell/const.dart';
 import 'package:syncuwell/models/timetable.dart';
 import 'package:syncuwell/pages/TimeTable/time-tablecontroller.dart';
 
-class TimetableDayFormWidget extends StatefulWidget {
+class PlannerTimetableDayFormWidget extends StatefulWidget {
   final int dayIndex;
 
-  TimetableDayFormWidget({required this.dayIndex});
+  PlannerTimetableDayFormWidget({required this.dayIndex});
 
   @override
-  State<TimetableDayFormWidget> createState() => _TimetableDayFormWidgetState();
+  State<PlannerTimetableDayFormWidget> createState() => _PlannerTimetableDayFormWidgetState();
 }
 
-class _TimetableDayFormWidgetState extends State<TimetableDayFormWidget> {
+class _PlannerTimetableDayFormWidgetState extends State<PlannerTimetableDayFormWidget> {
   final TimetableController timetableController = Get.find();
   TextEditingController titleController = TextEditingController();
   TextEditingController startTimeController = TextEditingController();
@@ -24,19 +24,17 @@ class _TimetableDayFormWidgetState extends State<TimetableDayFormWidget> {
   bool isPermanent = false;
   TimeOfDay? startTime;
   TimeOfDay? endTime;
-List<String> days = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday','Sunday'];
-
-
-List<String> mdays =['M','T','W','T','F','S','S'];
+  List<String> days = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday','Sunday'];
   Set<int> selectedIndices = Set();
-  TextDirection textDirection = TextDirection.ltr;
-  MaterialTapTargetSize tapTargetSize = MaterialTapTargetSize.padded;
-  TimePickerEntryMode entryMode = TimePickerEntryMode.dial;
+
+  List<String> mdays =['M','T','W','T','F','S','S'];
+
+
+
 
   @override
   Widget build(BuildContext context) {
     var screenSize = MediaQuery.of(context).size;
-
     return GetBuilder<TimetableController>(
       builder: (timetableController) {
         return Padding(
@@ -59,13 +57,6 @@ List<String> mdays =['M','T','W','T','F','S','S'];
                   TimeOfDay? selectedTime = await showTimePicker(
                     context: context,
                     initialTime: TimeOfDay.now(),
-                    initialEntryMode: entryMode,
-                    builder: (BuildContext context, Widget? child) {
-                      return MediaQuery(
-                        data: MediaQuery.of(context).copyWith(alwaysUse24HourFormat: false),
-                        child: child!,
-                      );
-                    },
                   );
 
                   if (selectedTime != null) {
@@ -90,14 +81,6 @@ List<String> mdays =['M','T','W','T','F','S','S'];
                     TimeOfDay? selectedTime = await showTimePicker(
                       context: context,
                       initialTime: TimeOfDay.now(),
-                      initialEntryMode: entryMode,
-                      builder: (BuildContext context, Widget? child) {
-                        return MediaQuery(
-                          data: MediaQuery.of(context).copyWith(alwaysUse24HourFormat: false),
-                          child: child!,
-                        );
-                      },
-
                     );
 
                     if (selectedTime != null) {
@@ -122,24 +105,11 @@ List<String> mdays =['M','T','W','T','F','S','S'];
                   ),
                 ),
               ),
-              Row(
-                children: [
-                  Text("Is this entry permanent",style: TextStyle(fontWeight: FontWeight.w400,fontSize: 16,),),
-                 SizedBox(width: 40,),
-                  Switch(
-                    value: isPermanent,
-                    onChanged: (bool newValue) {
-                      setState(() {
-                         isPermanent= newValue;
-                      });
-                    },
-                  ),
-                ],
-              ),
-              SizedBox(height: 10,),
+
+              SizedBox(height: 15,),
               Container(
-               // margin:  EdgeInsets.only(top: 9),
-               // padding: EdgeInsets.all(10),
+                // margin:  EdgeInsets.only(top: 9),
+                // padding: EdgeInsets.all(10),
                 height: screenSize.height * 0.06,
                 width: screenSize.width * 0.9,
 
@@ -165,17 +135,17 @@ List<String> mdays =['M','T','W','T','F','S','S'];
                         });
                       },
                       child: Container(
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(50),
-                          color: selectedIndices.contains(index) ?  AppColors.secondaryColor: Colors.black,
-                        ),
-                        child: Center(
-                          child: Text(
-                            mdays[index % mdays.length],
-                       style: TextStyle(color: Colors.white,fontSize: 20,fontWeight: FontWeight.bold),
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(50),
+                            color: selectedIndices.contains(index) ?  AppColors.secondaryColor: Colors.black,
                           ),
-                        )
-                        ),
+                          child: Center(
+                            child: Text(
+                              mdays[index % mdays.length],
+                              style: TextStyle(color: Colors.white,fontSize: 20,fontWeight: FontWeight.bold),
+                            ),
+                          )
+                      ),
                     );
 
 
@@ -184,7 +154,7 @@ List<String> mdays =['M','T','W','T','F','S','S'];
               ),
               ElevatedButton(
                 style: ElevatedButton.styleFrom(
-              backgroundColor: AppColors.secondaryColor,
+                  backgroundColor: AppColors.secondaryColor,
                 ),
                 onPressed: () {
                   if (startTime != null &&
@@ -256,15 +226,14 @@ class TimetableListWidget extends StatefulWidget {
 class _TimetableListWidgetState extends State<TimetableListWidget> {
   @override
   Widget build(BuildContext context) {
-
     final entries = widget.timetableController.timetable[widget.dayIndex];
-    print('length of entries ${entries?.length}');
     return ListView(
       shrinkWrap: true,
       physics: NeverScrollableScrollPhysics(),
       children: [
         if (entries != null && entries.isNotEmpty) ...[
           for (var i = 0; i < entries.length; i++)
+            entries[i].isPermanent? SizedBox.shrink():
             EntryWidget(
               entry: entries[i],
               dayIndex: widget.dayIndex,
@@ -272,6 +241,7 @@ class _TimetableListWidgetState extends State<TimetableListWidget> {
               context: widget.context,
               timetableController: widget.timetableController,
             ),
+
         ],
       ],
     );
@@ -359,78 +329,78 @@ class _EntryWidgetState extends State<EntryWidget> {
                   builder: (context) => AlertDialog(
                     title: Text('Edit Entry'),
                     content: StatefulBuilder(
-                      builder: (BuildContext context, StateSetter setState) {
-                        return Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
-                            TextField(
-                              controller: titleController,
-                              decoration: InputDecoration(labelText: 'Title'),
-                            ),
-                            GestureDetector(
-                              onTap: () async {
-                                TimeOfDay? selectedStartTime = await showTimePicker(
-                                  context: context,
-                                  initialTime: startTime ?? TimeOfDay.now(),
-                                );
-
-                                if (selectedStartTime != null) {
-                                  setState(() {
-                                    startTimeController.text =
-                                    '${selectedStartTime.hour}:${selectedStartTime.minute}';
-                                    startTime = selectedStartTime;
-                                  });
-                                }
-                              },
-                              child: AbsorbPointer(
-                                child: TextField(
-                                  controller: startTimeController,
-                                  decoration: InputDecoration(labelText: 'Start Time'),
-                                ),
+                        builder: (BuildContext context, StateSetter setState) {
+                          return Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              TextField(
+                                controller: titleController,
+                                decoration: InputDecoration(labelText: 'Title'),
                               ),
-                            ),
-                            GestureDetector(
-                              onTap: () async {
-                                if (startTime != null) {
-                                  TimeOfDay? selectedTime = await showTimePicker(
+                              GestureDetector(
+                                onTap: () async {
+                                  TimeOfDay? selectedStartTime = await showTimePicker(
                                     context: context,
-                                    initialTime: TimeOfDay.now(),
+                                    initialTime: startTime ?? TimeOfDay.now(),
                                   );
 
-                                  if (selectedTime != null) {
+                                  if (selectedStartTime != null) {
                                     setState(() {
-                                      endTime = selectedTime;
-                                      endTimeController.text =
-                                      '${selectedTime.hour}:${selectedTime.minute}';
+                                      startTimeController.text =
+                                      '${selectedStartTime.hour}:${selectedStartTime.minute}';
+                                      startTime = selectedStartTime;
                                     });
                                   }
-                                } else {
-                                  ScaffoldMessenger.of(context).showSnackBar(
-                                    SnackBar(
-                                      content: Text('Please select a start time first.'),
-                                    ),
-                                  );
-                                }
-                              },
-                              child: AbsorbPointer(
-                                child: TextField(
-                                  controller: endTimeController,
-                                  decoration: InputDecoration(labelText: ' End Time'),
+                                },
+                                child: AbsorbPointer(
+                                  child: TextField(
+                                    controller: startTimeController,
+                                    decoration: InputDecoration(labelText: 'Start Time'),
+                                  ),
                                 ),
                               ),
-                            ),
-                            Switch(
-                              value: pakka,
-                              onChanged: (bool newValue) {
-                                setState(() {
-                                 pakka = newValue;
-                                });
-                              },
-                            ),
-                          ],
-                        );
-                      }
+                              GestureDetector(
+                                onTap: () async {
+                                  if (startTime != null) {
+                                    TimeOfDay? selectedTime = await showTimePicker(
+                                      context: context,
+                                      initialTime: TimeOfDay.now(),
+                                    );
+
+                                    if (selectedTime != null) {
+                                      setState(() {
+                                        endTime = selectedTime;
+                                        endTimeController.text =
+                                        '${selectedTime.hour}:${selectedTime.minute}';
+                                      });
+                                    }
+                                  } else {
+                                    ScaffoldMessenger.of(context).showSnackBar(
+                                      SnackBar(
+                                        content: Text('Please select a start time first.'),
+                                      ),
+                                    );
+                                  }
+                                },
+                                child: AbsorbPointer(
+                                  child: TextField(
+                                    controller: endTimeController,
+                                    decoration: InputDecoration(labelText: ' End Time'),
+                                  ),
+                                ),
+                              ),
+                              Switch(
+                                value: pakka,
+                                onChanged: (bool newValue) {
+                                  setState(() {
+                                    pakka = newValue;
+                                  });
+                                },
+                              ),
+                            ],
+                          );
+                        }
                     ),
                     actions: [
                       TextButton(

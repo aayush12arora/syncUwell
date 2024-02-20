@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:syncuwell/pages/Notifications/notifications-page.dart';
 import 'package:syncuwell/pages/profile/profile_page.dart';
 
 class HeaderL extends StatefulWidget {
@@ -28,13 +29,15 @@ class _HeaderLState extends State<HeaderL> {
     if (userData.exists) {
       Map<String, dynamic>? data = userData.data() as Map<String, dynamic>?;
       if (data != null && data.containsKey('name')) {
-        setState(() {
+
 
           name = data['name'];
-        });
+
       }
     }
+setState(() {
 
+});
     // Return null if the document doesn't exist or 'name' field is missing
   }
   @override
@@ -44,7 +47,8 @@ class _HeaderLState extends State<HeaderL> {
       height: 75,
       width: double.infinity,
       decoration: BoxDecoration(
-          color: Colors.red[100],
+
+          color: Color(0xFFffdfd0),
           borderRadius: BorderRadius.circular(25)),
 
           child: Row(
@@ -57,7 +61,9 @@ SizedBox(width: 40,),
               ),
               SizedBox(width: 120,),
               IconButton(
-                onPressed: () {},
+                onPressed: () {
+                  Navigator.push(context, MaterialPageRoute(builder: (context)=>NotificationsPage()));
+                },
                 icon: Icon(Icons.notifications_active_rounded,color: Colors.blue[900],),
               ),
               IconButton(

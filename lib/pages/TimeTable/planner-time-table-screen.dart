@@ -1,37 +1,71 @@
+
 import 'dart:convert';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:syncuwell/pages/TimeTable/planner-time-table-form.dart';
 import 'package:get/get.dart';
 import 'package:get/get_core/src/get_main.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:syncuwell/Navigator/bottom_navigation.dart';
 import 'package:syncuwell/const.dart';
+import 'package:syncuwell/models/timetable.dart';
 import 'package:syncuwell/pages/TimeTable/time-tablecontroller.dart';
 import 'package:syncuwell/pages/TimeTable/timetabledayform.dart';
+import 'package:syncuwell/pages/profile/profile_page.dart';
 
-class TimetableScreen extends StatefulWidget {
- final UserCredential userCredential;
-final String  name;
- final String  email;
-   TimetableScreen({ required this.userCredential, required this.name, required this.email});
+class PlannerTimetableScreen extends StatefulWidget {
+
 
   @override
-  State<TimetableScreen> createState() => _TimetableScreenState();
+  State<PlannerTimetableScreen> createState() => _PlannerTimetableScreenState();
 }
 
-class _TimetableScreenState extends State<TimetableScreen> {
+class _PlannerTimetableScreenState extends State<PlannerTimetableScreen> {
   bool loading = false;
   // Ensure TimetableController is properly initialized
   final TimetableController timetableController =
   Get.put(TimetableController(), permanent: true);
   List<String> days = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
-
-
+  String name="";
+  String email="";
+  String? uid="";
   // Firestore collection reference
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+
+    getData();
+  }
+
+
   final CollectionReference timetableCollection =
   FirebaseFirestore.instance.collection('timetable');
+
+  Future<void> getData() async {
+    setState(() {
+      loading=true;
+    });
+    var db = FirebaseFirestore.instance;
+    uid = await getUID();
+    DocumentSnapshot userData = await db.collection('Users').doc(uid).get();
+    name = userData['name'];
+
+    email = userData['email'];
+
+
+    await fetchTimetableFromFirestore(uid!);
+    setState(() {
+      loading = false;
+    });
+  }
+
+
+
+
 
 
   Future<void> saveTimeTabletoLocalStorage( Map<String, dynamic> documentData) async {
@@ -40,10 +74,79 @@ class _TimetableScreenState extends State<TimetableScreen> {
     prefs.setString('timetable_data', json.encode(documentData));
 
   }
+
+
+
   String formatTimeOfDay(TimeOfDay timeOfDay) {
     final String hour = timeOfDay.hour.toString().padLeft(2, '0');
     final String minute = timeOfDay.minute.toString().padLeft(2, '0');
     return '$hour:$minute';
+  }
+
+
+
+  Future<void> fetchTimetableFromFirestore(String uid) async {
+    try {
+      DocumentSnapshot documentSnapshot = await timetableCollection.doc(uid).get();
+
+      if (documentSnapshot.exists) {
+        Map<String, dynamic> documentData = documentSnapshot.data() as Map<String, dynamic>;
+
+        String userName = documentData['name'];
+        print('User Name: $userName');
+
+        List<String> days = ['monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday', 'sunday'];
+
+        for (String day in days) {
+          if (documentData.containsKey(day)) {
+            List<Map<String, dynamic>> dayEntries = List<Map<String, dynamic>>.from(documentData[day]);
+            print('$day Entries: $dayEntries');
+
+            // Convert the Map entries to Timetable objects and add them to the controller
+            List<Timetable> timetableEntries = dayEntries.map((entry) {
+              // Parse the hours and minutes from the time strings
+              List<String> startTimeParts = entry['startTime'].split(':');
+              List<String> endTimeParts = entry['endTime'].split(':');
+
+              // Create TimeOfDay objects
+              TimeOfDay startTime = TimeOfDay(
+                hour: int.parse(startTimeParts[0]),
+                minute: int.parse(startTimeParts[1]),
+              );
+
+              TimeOfDay endTime = TimeOfDay(
+                hour: int.parse(endTimeParts[0]),
+                minute: int.parse(endTimeParts[1]),
+              );
+
+              return Timetable(
+                title: entry['title'],
+                start_time: startTime,
+                endTime: endTime,
+                isPermanent: entry['isPermanent'],
+              );
+            }).toList();
+
+            // Assuming you want to add these entries to the controller for the corresponding day
+            int dayIndex = days.indexOf(day);
+
+
+            // Update the controller
+            if(timetableController.timetable[dayIndex].length==0){
+              timetableController.timetable[dayIndex].addAll(timetableEntries);
+              timetableController.update();
+            }
+
+          }
+        }
+
+        print('Timetable data fetched from Firestore!');
+      } else {
+        print('Document does not exist');
+      }
+    } catch (e) {
+      print('Error fetching timetable data from Firestore: $e');
+    }
   }
 
   // Submit timetable data to Firestore
@@ -53,10 +156,10 @@ class _TimetableScreenState extends State<TimetableScreen> {
         loading = true;
       });
 
-      final String userName = widget.name;
+      final String userName = name;
 
       Map<String, dynamic> documentData = {
-
+        // 'name': userName,
       };
 
       List<String> days = ['monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday', 'sunday'];
@@ -70,13 +173,14 @@ class _TimetableScreenState extends State<TimetableScreen> {
             'startTime': formatTimeOfDay(entry.start_time!),
             'endTime': formatTimeOfDay(entry.endTime!),
             'isPermanent': entry.isPermanent,
+            'date': DateTime.now().toIso8601String(),
           }).toList();
         }
       }
 
       // TODO: Save timetable data to local storage
-       await saveTimeTabletoLocalStorage(documentData);
-      await timetableCollection.doc(widget.userCredential.user!.uid).set(documentData);
+      await saveTimeTabletoLocalStorage(documentData);
+      await timetableCollection.doc(uid).set(documentData);
 
       print('Timetable data submitted to Firestore!');
       setState(() {
@@ -101,28 +205,28 @@ class _TimetableScreenState extends State<TimetableScreen> {
   Widget build(BuildContext context) {
     var screenSize = MediaQuery.of(context).size;
     return Scaffold(
-      appBar: AppBar(
-        backgroundColor: AppColors.primaryColor,
+      appBar: AppBar(     backgroundColor: AppColors.primaryColor,
+
         title: Row(
           mainAxisAlignment: MainAxisAlignment.start,
           children: [
 
-            Text('Add your time-table entries'),
-           SizedBox(width: screenSize.width*0.07,),
+            Text('Update Entries'),
+            SizedBox(width: screenSize.width*0.23,),
             Padding(
 
               padding: const EdgeInsets.all(2.0),
               child: InkWell(
                 onTap: () async {
                   print('uploading to firestore');
-                await  submitTimetableToFirestore();
+                  await  submitTimetableToFirestore();
                 },
                 child: Container(
                   height: screenSize.height*0.05,
                   width: screenSize.width*0.12,
                   decoration: BoxDecoration(
-                    color: Colors.red,
-                    borderRadius: BorderRadius.circular(25)
+                      color: Colors.red,
+                      borderRadius: BorderRadius.circular(25)
                   ),
                   child: Center(child: IconButton(onPressed: () {     print('uploading to firestore');
                   submitTimetableToFirestore();}, icon: Center(child: Icon(Icons.upload,color: Colors.white,)),)),
@@ -147,7 +251,7 @@ class _TimetableScreenState extends State<TimetableScreen> {
             child: ListView.builder(
               itemCount: 7,
               itemBuilder: (context, dayIndex) {
-                return TimetableDayFormWidget(dayIndex: dayIndex);
+                return PlannerTimetableDayFormWidget(dayIndex: dayIndex);
               },
             ),
           ),

@@ -48,8 +48,6 @@ class _ChatPageState extends State<ChatPage> {
 
 
 
-
-
   Future<String?> getTimetableFromLocalStorage() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     String? timetableDataString = prefs.getString('timetable_data');
@@ -58,11 +56,13 @@ class _ChatPageState extends State<ChatPage> {
 
     example = 'My current timetable is as follows :\n';
     example += timetableDataString!;
-    example += 'You are a virtual assistant helping with my timetable. Today is ${getCurrentDay()}'
-    ' by this understand what would be the further days and I am giving you my  time table use this to answer my questions. For entries which are '
-    ' not permanent those can be replaced by any other activities i would like to perform but for'
-    ' permanent entries i want to keep them fixed. other than specified entry times I am free whole day and assume I sleep from 23:00 to 7:00  If no timetable is provided then i want you to'
-    'reply me back that go to profile section and add your timetable there .';
+    example += "You are a virtual assistant helping with my timetable. Today is ${getCurrentDay()}. "
+        "Please use this information to answer my questions about today's schedule or any other day's schedule as asked. "
+        "If there is no timetable for today, kindly inform me."
+        "For permanent entries, I want to keep them fixed , I cannot do any other activity during that entry time so dont suggest this time for any other activity. \n"
+    "For non-permanent entries, I can do other activities during that entry time."
+        "Other than specified entry times, I am free all day, and I assume I sleep from 23:00 to 7:00."
+        "If no timetable is provided, reply that I should go to the profile section and add the timetable there.";
 
     debugPrint('example $example');
     //print('example $example');
@@ -70,7 +70,7 @@ class _ChatPageState extends State<ChatPage> {
       Map<String, dynamic> timetableData = json.decode(timetableDataString);
       return timetableDataString;
     } else {
-      // If the data is not available in SharedPreferences
+
       return ''; // or handle it according to your use case
     }
   }
@@ -86,15 +86,7 @@ class _ChatPageState extends State<ChatPage> {
 
     // Load the timetable data from SharedPreferences
     getTimetableFromLocalStorage();
-    // Create a ChatMessage for the example message
-    // ChatMessage exampleMessage = ChatMessage(
-    //   text: example,
-    //   user: chatUser, // Use the current user for the example message
-    //   createdAt: DateTime.now(),
-    // );
 
-    // Send the example message without displaying it
-   // getChatResponse(exampleMessage, true);
   }
 
   List<ChatMessage> messages = <ChatMessage>[];
@@ -108,17 +100,25 @@ class _ChatPageState extends State<ChatPage> {
     var screenSize = MediaQuery.of(context).size;
     return SafeArea(
       child: Scaffold(
+        backgroundColor: Color.fromRGBO(217, 227, 241, 0.8),
         appBar: PreferredSize(
           preferredSize: Size(screenSize.width, 75),
           child: HeaderL(),
         ),
         body: DashChat(
+
           currentUser: chatUser,
           onSend: (ChatMessage m) {
             getChatResponse(m, false);
           },
+messageOptions: MessageOptions(
+  containerColor: Colors.white,
+  currentUserContainerColor:AppColors.primaryColor
+),
           messages: messages,
           typingUsers: typingUsers,
+
+
         ),
       ),
     );

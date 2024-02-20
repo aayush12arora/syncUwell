@@ -64,7 +64,7 @@ class _BottomNavigationState extends State<BottomNavigation> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.white54,
+      backgroundColor: Colors.white,
       body: loading
           ? Center(
         child: Container(
@@ -90,9 +90,9 @@ class _BottomNavigationState extends State<BottomNavigation> {
 
             iconSize: 28,
             type: BottomNavigationBarType.fixed,
-            backgroundColor: Colors.grey[500],
-            selectedItemColor: Colors.white,
-            unselectedItemColor: Colors.black,
+            backgroundColor: Colors.grey[600],
+            selectedItemColor: Color(0xff41ac78),
+            unselectedItemColor: Colors.white,
             currentIndex: _selectedIndex,
             onTap: _onItemTapped,
             items:  [

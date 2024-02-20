@@ -3,6 +3,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:syncuwell/const.dart';
 import 'package:syncuwell/models/timetable.dart';
 import 'package:syncuwell/pages/TimeTable/time-tablecontroller.dart';
 
@@ -23,15 +24,18 @@ class _UpdateTimetableDayFormWidgetState extends State<UpdateTimetableDayFormWid
   bool isPermanent = false;
   TimeOfDay? startTime;
   TimeOfDay? endTime;
-  List<String> days = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
+  Set<int> selectedIndices = Set();
+  List<String> days = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday','Sunday'];
 
 
+  List<String> mdays =['M','T','W','T','F','S','S'];
 
 
 
 
   @override
   Widget build(BuildContext context) {
+    var screenSize = MediaQuery.of(context).size;
     return GetBuilder<TimetableController>(
       builder: (timetableController) {
         return Padding(
@@ -102,21 +106,57 @@ class _UpdateTimetableDayFormWidgetState extends State<UpdateTimetableDayFormWid
                   ),
                 ),
               ),
-              Row(
-                children: [
-                  Text("Is this entry permanent",style: TextStyle(fontWeight: FontWeight.w400,fontSize: 16,),),
-                  SizedBox(width: 40,),
-                  Switch(
-                    value: isPermanent,
-                    onChanged: (bool newValue) {
-                      setState(() {
-                        isPermanent= newValue;
-                      });
-                    },
+
+              SizedBox(height: 15,),
+              Container(
+                // margin:  EdgeInsets.only(top: 9),
+                // padding: EdgeInsets.all(10),
+                height: screenSize.height * 0.06,
+                width: screenSize.width * 0.9,
+
+                child: GridView.builder(
+                  gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                    crossAxisCount: 7,
+                    crossAxisSpacing: 19.0,
+                    mainAxisSpacing: 39.0,
                   ),
-                ],
+                  itemCount: 7, // 3 rows x 3 columns
+                  itemBuilder: (context, index) {
+                    return InkWell(
+
+                      onTap: (){
+                        setState(() {
+                          if (selectedIndices.contains(index)) {
+                            print('already');
+                            selectedIndices.remove(index);
+                          } else {
+                            print('selected');
+                            selectedIndices.add(index);
+                          }
+                        });
+                      },
+                      child: Container(
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(50),
+                            color: selectedIndices.contains(index) ?  AppColors.secondaryColor: Colors.black,
+                          ),
+                          child: Center(
+                            child: Text(
+                              mdays[index % mdays.length],
+                              style: TextStyle(color: Colors.white,fontSize: 20,fontWeight: FontWeight.bold),
+                            ),
+                          )
+                      ),
+                    );
+
+
+                  },
+                ),
               ),
               ElevatedButton(
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: AppColors.secondaryColor,
+                ),
                 onPressed: () {
                   if (startTime != null &&
                       endTime != null &&
@@ -125,10 +165,14 @@ class _UpdateTimetableDayFormWidgetState extends State<UpdateTimetableDayFormWid
                       title: titleController.text,
                       start_time: startTime,
                       endTime: endTime!,
-                      isPermanent: isPermanent,
+                      isPermanent: true,
                     );
                     timetableController.addTimetable(widget.dayIndex, entry);
 
+                    for (int index in selectedIndices) {
+                      timetableController.addTimetable(index, entry);
+                      print("Selected index: $index");
+                    }
                     // Clear text fields
                     isPermanent = false;
                     titleController.clear();
@@ -136,6 +180,7 @@ class _UpdateTimetableDayFormWidgetState extends State<UpdateTimetableDayFormWid
                     endTime = null;
                     startTimeController.clear();
                     endTimeController.clear();
+                    selectedIndices.clear();
                   } else {
                     ScaffoldMessenger.of(context).showSnackBar(
                       SnackBar(
@@ -189,13 +234,14 @@ class _TimetableListWidgetState extends State<TimetableListWidget> {
       children: [
         if (entries != null && entries.isNotEmpty) ...[
           for (var i = 0; i < entries.length; i++)
+            entries[i].isPermanent?
             EntryWidget(
               entry: entries[i],
               dayIndex: widget.dayIndex,
               entryIndex: i,
               context: widget.context,
               timetableController: widget.timetableController,
-            ),
+            ):SizedBox.shrink()
         ],
       ],
     );

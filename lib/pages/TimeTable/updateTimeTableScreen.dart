@@ -7,9 +7,11 @@ import 'package:get/get.dart';
 import 'package:get/get_core/src/get_main.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:syncuwell/Navigator/bottom_navigation.dart';
+import 'package:syncuwell/const.dart';
 import 'package:syncuwell/models/timetable.dart';
 import 'package:syncuwell/pages/TimeTable/time-tablecontroller.dart';
 import 'package:syncuwell/pages/TimeTable/timetabledayform.dart';
+import 'package:syncuwell/pages/TimeTable/update-time-table-day-form.dart';
 import 'package:syncuwell/pages/profile/profile_page.dart';
 
 class UpdateTimetableScreen extends StatefulWidget {
@@ -60,17 +62,28 @@ await fetchTimetableFromFirestore(uid!);
     });
   }
 
+
+
+
+
+
   Future<void> saveTimeTabletoLocalStorage( Map<String, dynamic> documentData) async {
     // Save the timetable data map to SharedPreferences
     SharedPreferences prefs = await SharedPreferences.getInstance();
     prefs.setString('timetable_data', json.encode(documentData));
 
   }
+
+
+
   String formatTimeOfDay(TimeOfDay timeOfDay) {
     final String hour = timeOfDay.hour.toString().padLeft(2, '0');
     final String minute = timeOfDay.minute.toString().padLeft(2, '0');
     return '$hour:$minute';
   }
+
+
+
   Future<void> fetchTimetableFromFirestore(String uid) async {
     try {
       DocumentSnapshot documentSnapshot = await timetableCollection.doc(uid).get();
@@ -115,10 +128,14 @@ await fetchTimetableFromFirestore(uid!);
 
             // Assuming you want to add these entries to the controller for the corresponding day
             int dayIndex = days.indexOf(day);
-            timetableController.timetable[dayIndex].addAll(timetableEntries);
+
 
             // Update the controller
-            timetableController.update();
+            if(timetableController.timetable[dayIndex].length==0){
+              timetableController.timetable[dayIndex].addAll(timetableEntries);
+              timetableController.update();
+            }
+
           }
         }
 
@@ -141,7 +158,7 @@ await fetchTimetableFromFirestore(uid!);
       final String userName = name;
 
       Map<String, dynamic> documentData = {
-        'name': userName,
+        // 'name': userName,
       };
 
       List<String> days = ['monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday', 'sunday'];
@@ -155,6 +172,7 @@ await fetchTimetableFromFirestore(uid!);
             'startTime': formatTimeOfDay(entry.start_time!),
             'endTime': formatTimeOfDay(entry.endTime!),
             'isPermanent': entry.isPermanent,
+            'date': DateTime.now().toIso8601String(),
           }).toList();
         }
       }
@@ -186,13 +204,14 @@ await fetchTimetableFromFirestore(uid!);
   Widget build(BuildContext context) {
     var screenSize = MediaQuery.of(context).size;
     return Scaffold(
-      appBar: AppBar(
+      appBar: AppBar(     backgroundColor: AppColors.primaryColor,
+
         title: Row(
           mainAxisAlignment: MainAxisAlignment.start,
           children: [
 
             Text('Update Entries'),
-            SizedBox(width: screenSize.width*0.07,),
+            SizedBox(width: screenSize.width*0.23,),
             Padding(
 
               padding: const EdgeInsets.all(2.0),
@@ -231,7 +250,7 @@ await fetchTimetableFromFirestore(uid!);
             child: ListView.builder(
               itemCount: 7,
               itemBuilder: (context, dayIndex) {
-                return TimetableDayFormWidget(dayIndex: dayIndex);
+                return UpdateTimetableDayFormWidget(dayIndex: dayIndex);
               },
             ),
           ),

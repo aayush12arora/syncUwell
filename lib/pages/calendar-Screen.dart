@@ -23,23 +23,22 @@ class _TimetableCalendarScreenState extends State<TimetableCalendarScreen> {
   }
 
   Future<void> convertData() async {
-    List<String> days = ['monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday'];
+    List<String> days = ['sunday','monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday'];
     String? jsonString = await getTimetableFromLocalStorage();
     Map<String, dynamic> jsonData = json.decode(jsonString!);
 
     for (String day in days) {
       if (jsonData.containsKey(day)) {
         List<Map<String, dynamic>> dayEntries = List<Map<String, dynamic>>.from(jsonData[day]);
-        print('$day Entries: $dayEntries');
+       print('$day Entries: $dayEntries');
 
         List<Timetable> timetableEntries = dayEntries
             .map((entry) => Timetable.fromJson(entry))
             .toList();
 
-        // Get the DateTime for the selected day
+      //  print('timetableEntries: $timetableEntries');
+        // Create a DateTime for each hour of the selected day
         DateTime selectedDateTime = _selectedDay!.subtract(Duration(days: _selectedDay!.weekday - days.indexOf(day)));
-
-        // Create a DateTime for each hour of the day
         List<DateTime> hoursOfDay = List.generate(24, (hour) => selectedDateTime.add(Duration(hours: hour)));
 
         // Populate timetableData with entries for each hour
@@ -49,6 +48,7 @@ class _TimetableCalendarScreenState extends State<TimetableCalendarScreen> {
       }
     }
   }
+
 
 
 

@@ -10,8 +10,10 @@ import 'package:rflutter_alert/rflutter_alert.dart';
 
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:syncuwell/Utils/headerfile.dart';
+import 'package:syncuwell/const.dart';
 import 'package:syncuwell/pages/TimeTable/updateTimeTableScreen.dart';
 import 'package:syncuwell/pages/profile/change_avatart.dart';
+import 'package:syncuwell/pages/tracker/dashboard.dart';
 
 import '../Auth/login.dart';
 
@@ -168,6 +170,10 @@ class _ProfilePageState extends State<ProfilePage> {
               child: MainOptions(),
             ),
             ContactUs(),
+            SizedBox(height: height*.03,),
+                // ElevatedButton(onPressed: (){
+                //   Navigator.push(context, MaterialPageRoute(builder: (c)=>TaskDashBoard()));
+                // }, child: Text('See your Progress'))
           ]),
         ),
       ),
@@ -399,7 +405,7 @@ class _MainOptionsState extends State<MainOptions> {
               padding: const EdgeInsets.all(10.0),
               child: ElevatedButton(
                   style: ElevatedButton.styleFrom(
-                    primary: const Color(0xff60046E),
+                   backgroundColor: AppColors.primaryColor
                   ),
                   onPressed: () async {
                     _onAlertButtonsPressed(context);
@@ -416,6 +422,9 @@ class _MainOptionsState extends State<MainOptions> {
     Alert(
       context: context,
       type: AlertType.warning,
+     style: AlertStyle(
+       overlayColor: Colors.grey.withOpacity(0.5),
+     ),
       title: "LOGOUT",
       desc: "Do you want to logout ?",
       buttons: [
@@ -438,7 +447,7 @@ class _MainOptionsState extends State<MainOptions> {
               );
             });
           },
-          color: Color(0xff60046E),
+          color: AppColors.primaryColor,
         ),
         DialogButton(
           child: Text(
@@ -446,7 +455,7 @@ class _MainOptionsState extends State<MainOptions> {
             style: TextStyle(color: Colors.white, fontSize: 18),
           ),
           onPressed: () => Navigator.pop(context),
-          color: Color(0xff60046E),
+          color:  AppColors.primaryColor,
         )
       ],
     ).show();
