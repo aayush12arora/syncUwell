@@ -19,4 +19,17 @@ class TimetableController extends GetxController {
     timetable[day].removeAt(index);
     update();
   }
+
+  void updateTimetableFromSchedule(Map<String, dynamic> schedule) {
+    timetable.clear();
+    List<String> days = ['monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday', 'sunday'];
+
+    for (String day in days) {
+      List<dynamic> daySchedule = schedule[day] ?? [];
+      List<Timetable> timetableEntries = daySchedule.map((entry) => Timetable.fromJson(entry)).toList();
+      timetable.add(timetableEntries);
+    }
+
+    update();
+  }
 }

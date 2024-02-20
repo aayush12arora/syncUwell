@@ -318,7 +318,7 @@ Future<bool> isNewWeekStarted(Map<String, dynamic> schedule) async {
       // Check if the entry has a valid "date" key
       if (entry.containsKey("date")) {
         DateTime entryDate = DateTime.parse(entry["date"]);
-        print('Entry: $entry');
+
         int entryWeekNumber = getWeekNumber(entryDate);
         if (!entry["isPermanent"] && entryWeekNumber != currentWeekNumber) {
           print('day index $dayIndex, entry index $entryIndex');
@@ -334,7 +334,7 @@ Future<bool> isNewWeekStarted(Map<String, dynamic> schedule) async {
           weekEnded = true;
         }
       } else {
-        // Handle entries without a valid "date" key
+        // Handle entries without a valid "date" keyc
         print("Entry at index $entryIndex in day $dayIndex does not have a valid 'date' key");
       }
     }
@@ -343,11 +343,13 @@ Future<bool> isNewWeekStarted(Map<String, dynamic> schedule) async {
 
   // Save the updated documentData to local storage
   await saveTimeTabletoLocalStorage(schedule);
- //TODO: Save the updated documentData to  time table controller
+  print('Updated Schedule: $schedule');
+  //TODO: Save the updated documentData to  time table controller
  //  if(timetableController.timetable[dayIndex].length==0){
  //    timetableController.timetable[dayIndex].addAll(timetableEntries);
  //    timetableController.update();
  //  }
+  timetableController.updateTimetableFromSchedule(schedule);
   return weekEnded;
 }
 
