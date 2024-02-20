@@ -127,7 +127,7 @@ class _TaskDashBoardState extends State<TaskDashBoard> {
   }
 
 
-  Future<SfCircularChart> generateCompletionPercentagePieChart(Map<String, dynamic> data) async {
+  Future<Column> generateCompletionPercentagePieChart(Map<String, dynamic> data,int threshold) async {
     List<Map<String, dynamic>> tasks = data['tasks'] ?? [];
 
     int checkedCount = tasks.where((task) => task['isChecked'] == true).length;
@@ -157,7 +157,25 @@ class _TaskDashBoardState extends State<TaskDashBoard> {
       ),
     ];
 
-    return SfCircularChart(series: series,legend: Legend(isVisible: true),);
+    return Column(
+      children: [
+        SfCircularChart(series: series,legend: Legend(isVisible: true),),
+
+        checkedCount>=threshold?Text(
+          'Great ! You have completed: ${checkedCount} tasks ',
+          style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold,color: Colors.greenAccent),
+        ):Text(
+          'You missed the target of ${threshold} tasks',
+          style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold,color: Colors.redAccent)
+        ),
+        SizedBox(height: 10,),
+        Text(
+          'Completion Percentage: ${((checkedCount / tasks.length) * 100).toStringAsFixed(2)}%',
+          style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+        ),
+
+      ],
+    );
   }
 
 
@@ -194,8 +212,8 @@ class _TaskDashBoardState extends State<TaskDashBoard> {
                       print('Error in getMonthlyData: ${snapshot.error}');
                       return Text('Error: ${snapshot.error}');
                     } else {
-                      return FutureBuilder<SfCircularChart>(
-                        future: generateCompletionPercentagePieChart(snapshot.data!),
+                      return FutureBuilder<Column>(
+                        future: generateCompletionPercentagePieChart(snapshot.data!,30),
                         builder: (context, chartSnapshot) {
                           if (chartSnapshot.connectionState == ConnectionState.waiting) {
                             return CircularProgressIndicator();
@@ -226,8 +244,8 @@ class _TaskDashBoardState extends State<TaskDashBoard> {
                       return Text('Error: ${snapshot.error}');
 
                     } else {
-                      return FutureBuilder<SfCircularChart>(
-                        future: generateCompletionPercentagePieChart(snapshot.data!),
+                      return FutureBuilder<Column>(
+                        future: generateCompletionPercentagePieChart(snapshot.data!,7),
                         builder: (context, chartSnapshot) {
                           if (chartSnapshot.connectionState == ConnectionState.waiting) {
                             return CircularProgressIndicator();
@@ -256,8 +274,8 @@ class _TaskDashBoardState extends State<TaskDashBoard> {
                       print('Error: ${snapshot.error}');
                       return Text('Error: ${snapshot.error}');
                     } else {
-                      return FutureBuilder<SfCircularChart>(
-                        future: generateCompletionPercentagePieChart(snapshot.data!),
+                      return FutureBuilder<Column>(
+                        future: generateCompletionPercentagePieChart(snapshot.data!,1),
                         builder: (context, chartSnapshot) {
                           if (chartSnapshot.connectionState == ConnectionState.waiting) {
                             return CircularProgressIndicator();

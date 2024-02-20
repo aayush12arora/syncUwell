@@ -2,6 +2,8 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:syncuwell/Navigator/bottom_navigation.dart';
+import 'package:syncuwell/const.dart';
 import 'package:syncuwell/pages/TimeTable/planner-time-table-screen.dart';
 import 'package:syncuwell/pages/TimeTable/updateTimeTableScreen.dart';
 import 'package:syncuwell/pages/Todays-Tasks/todays-task.dart';
@@ -59,10 +61,10 @@ loading= false;
 
   final List<String> assetname = [
 
-    'Research.png',
-    'Schedule.png',
-    'Student.png',
-    'Student.png',
+    'progress-report.png',
+    'timetable.png',
+    '7-days.png',
+    'list.png',
 
   ];
 
@@ -109,7 +111,7 @@ loading= false;
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              Text("Good Evening ${name},",style: TextStyle(fontSize: 23,fontWeight: FontWeight.bold),),
+              Text("Good Evening, ${name}",style: TextStyle(fontSize: 23,fontWeight: FontWeight.bold),),
               Container(
                margin:  EdgeInsets.only(top: 19),
                 padding: EdgeInsets.all(4),
@@ -154,19 +156,14 @@ loading= false;
           children: [
             InkWell(
               onTap: () async {
-                SharedPreferences prefs = await SharedPreferences.getInstance();
-                String todayKey = DateFormat('dMMMyyyy').format(DateTime.now());
-                String sa= 'todo_tasks';
-                sa+= '_$todayKey';
-
-                prefs.remove(sa);
+           Navigator.push(context, MaterialPageRoute(builder: (r)=>BottomNavigation(2)));
               },
               child: Container(
                   margin: EdgeInsets.only(top: 20,left: 2,right: 15),
                   height: 55,
                   width: screenSize.width*0.55,
                   decoration: BoxDecoration(
-                      color: Colors.green[300],
+                      color: AppColors.primaryColor,
                       borderRadius: BorderRadius.circular(25)),
 
                   child: Center(
