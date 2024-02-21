@@ -113,7 +113,7 @@ class _ChatPageState extends State<ChatPage> {
           },
 messageOptions: MessageOptions(
   containerColor: Colors.white,
-  currentUserContainerColor:AppColors.primaryColor
+  currentUserContainerColor:Color(0xffff914d).withOpacity(0.5)
 ),
           messages: messages,
           typingUsers: typingUsers,

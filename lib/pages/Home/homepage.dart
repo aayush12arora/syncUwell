@@ -94,7 +94,7 @@ loading= false;
         ),
       )
           :Scaffold(
-        backgroundColor: Colors.white,
+        backgroundColor: Colors.black,
         appBar: PreferredSize(
           preferredSize: Size(screenSize.width, 75),
           child: HeaderL(),
@@ -105,13 +105,13 @@ loading= false;
           height: screenSize.height * 0.7,
           width: screenSize.width * 0.9,
           decoration: BoxDecoration(
-            color: Color(0xffd9e3f1),
+            color: Colors.white,
             borderRadius: BorderRadius.circular(25),
           ),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              Text("Good Evening, ${name}",style: TextStyle(fontSize: 23,fontWeight: FontWeight.bold),),
+              Text("Hello, ${name}",style: TextStyle(fontSize: 23,fontWeight: FontWeight.bold),),
               Container(
                margin:  EdgeInsets.only(top: 19),
                 padding: EdgeInsets.all(4),
@@ -119,7 +119,7 @@ loading= false;
                 width: screenSize.width * 0.9,
                 decoration: BoxDecoration(
                   //color: Colors.redAccent
-                   color: Color(0xffd9e3f1),
+                   color: Colors.white,
                 ),
                 child: GridView.builder(
                   gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
@@ -151,45 +151,51 @@ loading= false;
                   },
                 ),
               ),
-        Row(
-          mainAxisAlignment: MainAxisAlignment.start,
-          children: [
-            InkWell(
-              onTap: () async {
-           Navigator.push(context, MaterialPageRoute(builder: (r)=>BottomNavigation(2)));
-              },
-              child: Container(
-                  margin: EdgeInsets.only(top: 20,left: 2,right: 15),
-                  height: 55,
-                  width: screenSize.width*0.55,
-                  decoration: BoxDecoration(
-                      color: AppColors.primaryColor,
-                      borderRadius: BorderRadius.circular(25)),
+        Container(
+margin: EdgeInsets.only(top:15,left: 2,right: 15) ,
+          height: screenSize.height*0.07,
+          decoration: BoxDecoration(
+              color: Color(0xffff914d),
+            borderRadius: BorderRadius.circular(25)),
 
-                  child: Center(
-                    child: Text(
-                      "Ask me Anything",
-                      style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold,color: Colors.white),
-                    ),
-                  )
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.start,
+            children: [
+              InkWell(
+                onTap: () async {
+             Navigator.push(context, MaterialPageRoute(builder: (r)=>BottomNavigation(2)));
+                },
+                child: Container(
+                    margin: EdgeInsets.only(left: 2,right: 15),
+                    height: 55,
+                    width: screenSize.width*0.55,
+                    decoration: BoxDecoration(
+                        color:Color(0xffff914d),
+                        borderRadius: BorderRadius.circular(25)),
+
+                    child: Center(
+                      child: Text(
+                        "Ask me Anything",
+                        style: TextStyle(fontSize: 20,color: Colors.black),
+                      ),
+                    )
+                ),
               ),
-            ),
-
-            Container(
-                margin: EdgeInsets.only(top: 20,left: 2,right: 5),
-                height: 65,
-                width: screenSize.width*0.15,
-                decoration: BoxDecoration(
-                    color: Colors.green[300],
-                    borderRadius: BorderRadius.circular(15)),
-
-                child: Center(
-                  child: Icon(Icons.headset_mic_rounded,color: Colors.white,),
+              Container(
+                padding: EdgeInsets.all(5),
+                child: Image.asset('assets/bot.png',
+                  height: 40,
+                  width: 40,
                 )
-            ),
-          ],
+              )
+
+              //TODO bot logo in this mic and extended
 
 
+            ],
+
+
+          ),
         )
             ],
           ),

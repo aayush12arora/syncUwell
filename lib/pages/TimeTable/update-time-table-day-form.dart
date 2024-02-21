@@ -308,13 +308,13 @@ class _EntryWidgetState extends State<EntryWidget> {
             Text(
               '${startTime?.format(widget.context)} to ${endTime?.format(widget.context)}',
               style: TextStyle(
-                  color: widget.entry.isPermanent ? Colors.redAccent : Colors.green),
+                  color: widget.entry.isPermanent ? Color(0xffff914d) : Colors.green),
             ),
             Text("Is this entry permanent ",style: TextStyle(fontWeight: FontWeight.w400,fontSize: 16,),),
             Text(
               '${widget.entry.isPermanent}',
               style: TextStyle(
-                  color: widget.entry.isPermanent ? Colors.redAccent : Colors.green),
+                  color: widget.entry.isPermanent ? Color(0xffff914d) : Colors.green),
             ),
           ],
         ),

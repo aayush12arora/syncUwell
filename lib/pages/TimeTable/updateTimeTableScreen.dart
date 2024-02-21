@@ -204,7 +204,7 @@ await fetchTimetableFromFirestore(uid!);
   Widget build(BuildContext context) {
     var screenSize = MediaQuery.of(context).size;
     return Scaffold(
-      appBar: AppBar(     backgroundColor: AppColors.primaryColor,
+      appBar: AppBar(     backgroundColor: Color(0xffff914d),
 
         title: Row(
           mainAxisAlignment: MainAxisAlignment.start,
@@ -224,7 +224,7 @@ await fetchTimetableFromFirestore(uid!);
                   height: screenSize.height*0.05,
                   width: screenSize.width*0.12,
                   decoration: BoxDecoration(
-                      color: Colors.red,
+                      color: Colors.black,
                       borderRadius: BorderRadius.circular(25)
                   ),
                   child: Center(child: IconButton(onPressed: () {     print('uploading to firestore');

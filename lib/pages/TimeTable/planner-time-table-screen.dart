@@ -205,14 +205,14 @@ class _PlannerTimetableScreenState extends State<PlannerTimetableScreen> {
   Widget build(BuildContext context) {
     var screenSize = MediaQuery.of(context).size;
     return Scaffold(
-      appBar: AppBar(     backgroundColor: AppColors.primaryColor,
+      appBar: AppBar(     backgroundColor:Color(0xffff914d),
 
         title: Row(
           mainAxisAlignment: MainAxisAlignment.start,
           children: [
 
-            Text('Update Entries'),
-            SizedBox(width: screenSize.width*0.23,),
+            Text('Personalized Entries'),
+            SizedBox(width: screenSize.width*0.1,),
             Padding(
 
               padding: const EdgeInsets.all(2.0),
@@ -225,7 +225,7 @@ class _PlannerTimetableScreenState extends State<PlannerTimetableScreen> {
                   height: screenSize.height*0.05,
                   width: screenSize.width*0.12,
                   decoration: BoxDecoration(
-                      color: Colors.red,
+                      color: Colors.black,
                       borderRadius: BorderRadius.circular(25)
                   ),
                   child: Center(child: IconButton(onPressed: () {     print('uploading to firestore');

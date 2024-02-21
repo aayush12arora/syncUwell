@@ -208,9 +208,11 @@ class _TaskListViewState extends State<TaskListView> {
         todayTasks.where((task) => task['isChecked'] != true).toList();
         return SafeArea(
           child: Scaffold(
+            resizeToAvoidBottomInset: false,
             floatingActionButton: FloatingActionButton(
               onPressed: () {
                 showModalBottomSheet(
+                  isScrollControlled: true,
                   context: context,
                   builder: (BuildContext context) {
                     return AddTaskPopup(todayTasks,addTaskToList); // Replace AddTaskPopup with your custom widget for adding a task
@@ -263,8 +265,8 @@ class _TaskListViewState extends State<TaskListView> {
                                       decoration: BoxDecoration(
                                         borderRadius: BorderRadius.circular(15),
                                         color: isPermanent
-                                            ? Color(0xfff7b593)
-                                            : Colors.greenAccent,
+                                            ? Color(0xffff914d).withOpacity(0.5)
+                                            : Colors.grey[300],
                                       ),
                                       child: CheckboxListTile(
                                         title: Text(task['title']),
@@ -323,7 +325,7 @@ class _TaskListViewState extends State<TaskListView> {
                                     child: Container(
                                       decoration: BoxDecoration(
                                         borderRadius: BorderRadius.circular(15),
-                                        color: Colors.grey[300],
+                                        color:Color(0xff7ed957).withOpacity(0.5),
                                       ),
                                       child: CheckboxListTile(
                                         title: Text(task['title'],
@@ -348,7 +350,7 @@ class _TaskListViewState extends State<TaskListView> {
                                         },
                                         activeColor: isPermanent
                                             ? Colors.red[200]
-                                            : Colors.greenAccent,
+                                            : Color(0xff7ed957),
                                         controlAffinity:
                                         ListTileControlAffinity.leading,
                                       ),
@@ -416,74 +418,81 @@ class _AddTaskPopupState extends State<AddTaskPopup> {
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: EdgeInsets.all(20),
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          TextField(
-            controller: _titleController,
-            decoration: InputDecoration(
-              labelText: 'Title',
+    return SingleChildScrollView(
+      child: Padding(
+        padding: EdgeInsets.only(
+          bottom: MediaQuery.of(context).viewInsets.bottom, // Adjust for keyboard
+          left: 20,
+          right: 20,
+          top: 20,
+        ),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            TextField(
+              controller: _titleController,
+              decoration: InputDecoration(
+                labelText: 'Title',
+              ),
             ),
-          ),
-          SizedBox(height: 10),
-          InkWell(
-            onTap: () async {
-              final TimeOfDay? picked = await showTimePicker(
-                context: context,
-                initialTime: _startTime,
-              );
-              if (picked != null && picked != _startTime)
-                setState(() {
-                  _startTime = picked;
-                });
-            },
-            child: Row(
-              children: [
-                Icon(Icons.access_time),
-                SizedBox(width: 10),
-                Text('Start Time: ${_startTime.format(context)}'),
-              ],
+            SizedBox(height: 10),
+            InkWell(
+              onTap: () async {
+                final TimeOfDay? picked = await showTimePicker(
+                  context: context,
+                  initialTime: _startTime,
+                );
+                if (picked != null && picked != _startTime)
+                  setState(() {
+                    _startTime = picked;
+                  });
+              },
+              child: Row(
+                children: [
+                  Icon(Icons.access_time),
+                  SizedBox(width: 10),
+                  Text('Start Time: ${_startTime.format(context)}'),
+                ],
+              ),
             ),
-          ),
-          SizedBox(height: 10),
-          InkWell(
-            onTap: () async {
-              final TimeOfDay? picked = await showTimePicker(
-                context: context,
-                initialTime: _endTime,
-              );
-              if (picked != null && picked != _endTime)
-                setState(() {
-                  _endTime = picked;
-                });
-            },
-            child: Row(
-              children: [
-                Icon(Icons.access_time),
-                SizedBox(width: 10),
-                Text('End Time: ${_endTime.format(context)}'),
-              ],
+            SizedBox(height: 10),
+            InkWell(
+              onTap: () async {
+                final TimeOfDay? picked = await showTimePicker(
+                  context: context,
+                  initialTime: _endTime,
+                );
+                if (picked != null && picked != _endTime)
+                  setState(() {
+                    _endTime = picked;
+                  });
+              },
+              child: Row(
+                children: [
+                  Icon(Icons.access_time),
+                  SizedBox(width: 10),
+                  Text('End Time: ${_endTime.format(context)}'),
+                ],
+              ),
             ),
-          ),
-          SizedBox(height: 20),
-          ElevatedButton(
-            onPressed: () {
-              // Add your logic to handle adding the task here
-              String title = _titleController.text;
-              String startTime = _startTime.format(context);
-              String endTime = _endTime.format(context);
-              // Call a function to add the task with provided details
+            SizedBox(height: 20),
+            ElevatedButton(
+              onPressed: () {
+                // Add your logic to handle adding the task here
+                String title = _titleController.text;
+                String startTime = _startTime.format(context);
+                String endTime = _endTime.format(context);
+                // Call a function to add the task with provided details
 
-                addTaskToList();
+                  addTaskToList();
 
 
-              Navigator.of(context).pop(); // Close the popup
-            },
-            child: Text('Add Task'),
-          ),
-        ],
+                Navigator.of(context).pop(); // Close the popup
+              },
+              child: Text('Add Task'),
+            ),
+          ],
+        ),
       ),
     );
   }

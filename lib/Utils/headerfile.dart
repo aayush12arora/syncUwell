@@ -48,7 +48,7 @@ setState(() {
       width: double.infinity,
       decoration: BoxDecoration(
 
-          color: Color(0xFFffdfd0),
+          color: Color(0xffff914d),
           borderRadius: BorderRadius.circular(25)),
 
           child: Row(
@@ -64,7 +64,7 @@ SizedBox(width: 40,),
                 onPressed: () {
                   Navigator.push(context, MaterialPageRoute(builder: (context)=>NotificationsPage()));
                 },
-                icon: Icon(Icons.notifications_active_rounded,color: Colors.blue[900],),
+                icon: Icon(Icons.notifications_active_rounded,color: Colors.black,),
               ),
               IconButton(
                 onPressed: () {

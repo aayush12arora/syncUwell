@@ -404,20 +404,20 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    Color myHexColor = Color(0XFFf4ab9a);
+    Color myHexColor = Color(0xffff914d);
     MaterialColor myMaterialColor = MaterialColor(
       myHexColor.value,
       <int, Color>{
-        50: myHexColor.withOpacity(0.1),
-        100: myHexColor.withOpacity(0.2),
-        200: myHexColor.withOpacity(0.3),
-        300: myHexColor.withOpacity(0.4),
-        400: myHexColor.withOpacity(0.5),
-        500: myHexColor.withOpacity(0.6),
-        600: myHexColor.withOpacity(0.7),
-        700: myHexColor.withOpacity(0.8),
-        800: myHexColor.withOpacity(0.9),
-        900: myHexColor.withOpacity(1.0),
+        50: myHexColor.withOpacity(1),
+        100: myHexColor.withOpacity(1),
+        200: myHexColor.withOpacity(1),
+        300: myHexColor.withOpacity(1),
+        400: myHexColor.withOpacity(1),
+        500: myHexColor.withOpacity(1),
+        600: myHexColor.withOpacity(1),
+        700: myHexColor.withOpacity(1),
+        800: myHexColor.withOpacity(1),
+        900: myHexColor.withOpacity(1),
       },
     );
     return FutureBuilder(

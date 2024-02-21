@@ -145,9 +145,9 @@ class _TaskDashBoardState extends State<TaskDashBoard> {
         // Specify colors for each data point
         pointColorMapper: (Map<String, dynamic> task, _) {
           if (task['label'] == 'Complete') {
-            return Colors.greenAccent; // You can use any color here
+            return Color(0xff7ed957).withOpacity(0.5); // You can use any color here
           } else if (task['label'] == 'Incomplete') {
-            return Colors.redAccent; // You can use any color here
+            return Color(0xffff914d).withOpacity(0.5); // You can use any color here
           }
           return Colors.grey; // Default color for other cases
         },
@@ -163,7 +163,7 @@ class _TaskDashBoardState extends State<TaskDashBoard> {
 
         checkedCount>=threshold?Text(
           'Great ! You have completed: ${checkedCount} tasks ',
-          style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold,color: Colors.greenAccent),
+          style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold,color: Colors.green),
         ):Text(
           'You missed the target of ${threshold} tasks',
           style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold,color: Colors.redAccent)
@@ -187,7 +187,7 @@ class _TaskDashBoardState extends State<TaskDashBoard> {
     double height = MediaQuery.of(context).size.height;
     return SafeArea(
       child: Scaffold(
-        backgroundColor: AppColors.primaryColor,
+        backgroundColor: Colors.white,
         appBar: PreferredSize(
           preferredSize: Size(width, 75),
           child: HeaderL(),

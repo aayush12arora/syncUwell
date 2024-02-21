@@ -91,7 +91,7 @@ class _BottomNavigationState extends State<BottomNavigation> {
             iconSize: 28,
             type: BottomNavigationBarType.fixed,
             backgroundColor: Colors.grey[600],
-            selectedItemColor: Color(0xff41ac78),
+            selectedItemColor: Color(0xffff914d),
             unselectedItemColor: Colors.white,
             currentIndex: _selectedIndex,
             onTap: _onItemTapped,

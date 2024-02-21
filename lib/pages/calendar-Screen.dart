@@ -87,7 +87,7 @@ class _TimetableCalendarScreenState extends State<TimetableCalendarScreen> {
             },
             calendarStyle: CalendarStyle(
               todayDecoration: BoxDecoration(
-                color: Colors.greenAccent, // Color for today's date
+                color: Color(0xffff914d), // Color for today's date
                 shape: BoxShape.circle,
               ),
               selectedDecoration: BoxDecoration(
