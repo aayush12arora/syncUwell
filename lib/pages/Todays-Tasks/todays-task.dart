@@ -66,7 +66,10 @@ class _TaskListViewState extends State<TaskListView> {
 
     // Check if there are any tasks for today in stored data
     tasks = json.decode(timetableDataString!);
-    todayTasks = List<Map<String, dynamic>>.from(tasks[currentDay]);
+    print('timeTableData $tasks');
+    print('timetablestring $todayTasksString');
+    tasks[currentDay]!=null?todayTasks = List<Map<String, dynamic>>.from(tasks[currentDay]):todayTasks=[];
+   // todayTasks = List<Map<String, dynamic>>.from(tasks[currentDay]);
 
     // Initialize the isChecked property for each task
     todayTasks.forEach((task) {
@@ -369,8 +372,31 @@ class _TaskListViewState extends State<TaskListView> {
           ),
         );
       } else {
-        return Center(
-          child: Text('No tasks available for today.'),
+        return SafeArea(
+          child: Scaffold(
+            resizeToAvoidBottomInset: false,
+            floatingActionButton: FloatingActionButton(
+              onPressed: () {
+                showModalBottomSheet(
+                  isScrollControlled: true,
+                  context: context,
+                  builder: (BuildContext context) {
+                    return AddTaskPopup(todayTasks,addTaskToList); // Replace AddTaskPopup with your custom widget for adding a task
+                  },
+                );
+              },
+              child: Icon(Icons.add),
+            ),
+            floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
+            appBar: PreferredSize(
+              preferredSize: Size(screenSize.width, 75),
+              child: HeaderL(),
+            ),
+            backgroundColor: Colors.white,
+            body: Center(
+              child:Text('No tasks for today'),
+            ),
+          ),
         );
       }
     }

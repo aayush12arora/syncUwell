@@ -92,23 +92,16 @@ class _PlannerTimetableScreenState extends State<PlannerTimetableScreen> {
       if (documentSnapshot.exists) {
         Map<String, dynamic> documentData = documentSnapshot.data() as Map<String, dynamic>;
 
-        String userName = documentData['name'];
-        print('User Name: $userName');
-
         List<String> days = ['monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday', 'sunday'];
 
         for (String day in days) {
           if (documentData.containsKey(day)) {
             List<Map<String, dynamic>> dayEntries = List<Map<String, dynamic>>.from(documentData[day]);
-            print('$day Entries: $dayEntries');
 
-            // Convert the Map entries to Timetable objects and add them to the controller
             List<Timetable> timetableEntries = dayEntries.map((entry) {
-              // Parse the hours and minutes from the time strings
               List<String> startTimeParts = entry['startTime'].split(':');
               List<String> endTimeParts = entry['endTime'].split(':');
 
-              // Create TimeOfDay objects
               TimeOfDay startTime = TimeOfDay(
                 hour: int.parse(startTimeParts[0]),
                 minute: int.parse(startTimeParts[1]),
@@ -127,16 +120,18 @@ class _PlannerTimetableScreenState extends State<PlannerTimetableScreen> {
               );
             }).toList();
 
-            // Assuming you want to add these entries to the controller for the corresponding day
             int dayIndex = days.indexOf(day);
 
+            // Check if the timetableController.timetable list exists
+            if (timetableController.timetable.length <= dayIndex) {
+              timetableController.timetable.add(<Timetable>[]); // Initialize the list if it doesn't exist
+            }
 
-            // Update the controller
-            if(timetableController.timetable[dayIndex].length==0){
+            // Add timetable entries to the list
+            if (timetableController.timetable[dayIndex].length == 0) {
               timetableController.timetable[dayIndex].addAll(timetableEntries);
               timetableController.update();
             }
-
           }
         }
 

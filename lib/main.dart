@@ -166,7 +166,7 @@ DateTime convertStringToDateTime(String timeString) {
   List<String> timeParts = timeString.split(':');
   int hour = int.parse(timeParts[0]);
   int minute = int.parse(timeParts[1]);
- DateTime scheduledTime = DateTime(now.year, now.month, now.day, hour, minute-2);
+ DateTime scheduledTime = DateTime(now.year, now.month, now.day, hour, minute-10);
  if(scheduledTime.isBefore(now)) {
    scheduledTime = scheduledTime.add(Duration(days: 1));
  }

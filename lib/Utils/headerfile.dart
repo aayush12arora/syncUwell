@@ -19,6 +19,10 @@ class _HeaderLState extends State<HeaderL> {
     super.initState();
     getData();
   }
+  String getFirstName(String fullName) {
+    var nameParts = fullName.split(RegExp(r'\s|\.'));
+    return nameParts.first;
+  }
   Future<void> getData() async {
 
     var db = FirebaseFirestore.instance;
@@ -31,7 +35,7 @@ class _HeaderLState extends State<HeaderL> {
       if (data != null && data.containsKey('name')) {
 
 
-          name = data['name'];
+          name = getFirstName(data['name']);
 
       }
     }
@@ -42,6 +46,8 @@ setState(() {
   }
   @override
   Widget build(BuildContext context) {
+    double width = MediaQuery.of(context).size.width;
+    double height = MediaQuery.of(context).size.height;
     return Container(
       margin: EdgeInsets.only(top: 20,left: 18,right: 18),
       height: 75,
@@ -59,7 +65,7 @@ SizedBox(width: 40,),
                  name!=null?name!:'loading',
                 style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
               ),
-              SizedBox(width: 120,),
+              SizedBox(width: width*0.25 ,),
               IconButton(
                 onPressed: () {
                   Navigator.push(context, MaterialPageRoute(builder: (context)=>NotificationsPage()));

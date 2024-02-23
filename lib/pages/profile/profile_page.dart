@@ -5,12 +5,15 @@ import 'package:fluttermoji/fluttermojiCircleAvatar.dart';
 import 'package:get/get.dart';
 import 'package:get/get_core/src/get_main.dart';
 import 'package:get_storage/get_storage.dart';
+import 'package:intl/intl.dart';
 import 'package:rflutter_alert/rflutter_alert.dart';
 
 
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:syncuwell/Utils/headerfile.dart';
 import 'package:syncuwell/const.dart';
+import 'package:syncuwell/main.dart';
+import 'package:syncuwell/pages/TimeTable/time-tablecontroller.dart';
 import 'package:syncuwell/pages/TimeTable/updateTimeTableScreen.dart';
 import 'package:syncuwell/pages/profile/change_avatart.dart';
 import 'package:syncuwell/pages/tracker/dashboard.dart';
@@ -44,6 +47,8 @@ class ProfilePage extends StatefulWidget {
 }
 
 class _ProfilePageState extends State<ProfilePage> {
+  final TimetableController timetableController =
+  Get.put(TimetableController(), permanent: true);
   final _nameController = TextEditingController();
   bool profileEdit = false;
   String name = "syncUwell";
@@ -437,9 +442,17 @@ class _MainOptionsState extends State<MainOptions> {
             await FirebaseAuth.instance.signOut().then((value) async {
               //delete uid from getstorage.
 
-              await removeStringFromPrefs('uid');
+             // await removeStringFromPrefs('uid');
+              GetStorage().remove('uid');
+              await removeStringFromPrefs('timetable_data');
+              String todayKey = DateFormat('dMMMyyyy').format(DateTime.now());
+              String sa= 'todo_tasks';
+              sa+= '_$todayKey';
+
+              await removeStringFromPrefs(sa);
               SharedPreferences prefs = await SharedPreferences.getInstance();
               prefs.setBool('LogedIn', false);
+              timetableController.timetable.clear();
               Navigator.pushAndRemoveUntil(
                 context,
                 MaterialPageRoute(builder: (context) => LoginScreen()),

@@ -395,22 +395,22 @@ class _LoginScreenState extends State<LoginScreen> {
                 height: height * .04,
               ),
               //Sign Up Button
-              InkWell(
-                onTap: () {
-                  Navigator.pushReplacement(context,
-                      MaterialPageRoute(builder: (_) => SignUpScreen()));
-                },
-                child: Text(
-                  "Sign-Up",
-                  style:
-                  const TextStyle(
-                        decoration: TextDecoration.underline,
-                        color: Colors.black,
-                        fontSize: 20,
-                        fontWeight: FontWeight.w700),
-
-                ),
-              ),
+              // InkWell(
+              //   onTap: () {
+              //     Navigator.pushReplacement(context,
+              //         MaterialPageRoute(builder: (_) => SignUpScreen()));
+              //   },
+              //   child: Text(
+              //     "Sign-Up",
+              //     style:
+              //     const TextStyle(
+              //           decoration: TextDecoration.underline,
+              //           color: Colors.black,
+              //           fontSize: 20,
+              //           fontWeight: FontWeight.w700),
+              //
+              //   ),
+              // ),
               SizedBox(
                 height: height * .01,
               ),
