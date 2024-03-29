@@ -104,7 +104,9 @@ class _TaskDashBoardState extends State<TaskDashBoard> {
   Future<Map<String, dynamic>> getDailyData(DateTime date) async {
     String? userId = await getUID();
     String todayKey = DateFormat('d MMM yyyy').format(date);
-
+   final atesnap =  await FirebaseFirestore.instance
+        .collection('Daily_Tracker').doc(userId).get();
+    print('aten: ${atesnap.data()} documents');
     DocumentSnapshot dailySnapshot = await FirebaseFirestore.instance
         .collection('Daily_Tracker')
         .doc(userId)

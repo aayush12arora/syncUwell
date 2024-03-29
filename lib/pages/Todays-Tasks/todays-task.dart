@@ -4,6 +4,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:syncuwell/Navigator/bottom_navigation.dart';
 import 'package:syncuwell/Utils/headerfile.dart';
 import 'package:syncuwell/models/timetable.dart';
 import 'package:syncuwell/pages/profile/profile_page.dart';
@@ -67,7 +68,7 @@ class _TaskListViewState extends State<TaskListView> {
     // Check if there are any tasks for today in stored data
     tasks = json.decode(timetableDataString!);
     print('timeTableData $tasks');
-    print('timetablestring $todayTasksString');
+    print('todaystaskstring $todayTasksString');
     tasks[currentDay]!=null?todayTasks = List<Map<String, dynamic>>.from(tasks[currentDay]):todayTasks=[];
    // todayTasks = List<Map<String, dynamic>>.from(tasks[currentDay]);
 
@@ -115,9 +116,7 @@ class _TaskListViewState extends State<TaskListView> {
     todayTasks.clear();
     todayTasks = List<Map<String, dynamic>>.from(storedTodayTasks);
     print('todaystaks $storedTodayTasks');
-    // print('TodayTaskslistlen ${todayTasks.length}');
-    // print('TodayTaskslist ${todayTasks.length}');
-    // print('TodayTaskslist $todayTasks');
+
     prefs.setString(sa, json.encode(storedTodayTasks));
 
     setState(() {
@@ -232,138 +231,147 @@ class _TaskListViewState extends State<TaskListView> {
               child: HeaderL(),
             ),
             backgroundColor: Colors.white,
-            body: SingleChildScrollView(
+            body: WillPopScope(
+              onWillPop: () async {
+                // Navigate back to the home page
+                Navigator.push(context, MaterialPageRoute(builder: (context) =>BottomNavigation( 1)));
+                return false; // Do not allow the default back button behavior
+              },
               child: Column(
                 children: [
                   SizedBox(height: screenSize.height * 0.03),
                   Container(
+                    height: screenSize.height*0.7,
 
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        // Display incomplete tasks
-                        if (incompleteTasks.isNotEmpty)
-                          Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Padding(
-                                padding: const EdgeInsets.only(left: 18.0),
-                                child: Text('Tasks for Today',style: TextStyle(
-                                    fontSize: 18,
-                                    fontWeight: FontWeight.bold),),
-                              ),
-                              SizedBox(height: 8),
-                              ListView.builder(
-                                shrinkWrap: true,
-                                itemCount: incompleteTasks.length,
-                                itemBuilder: (context, index) {
-                                  Map<String, dynamic> task =
-                                  incompleteTasks[index];
-                                  bool isPermanent = task['isPermanent'];
-                                  bool isChecked = task['isChecked'] ?? false;
+                    child: SingleChildScrollView(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          // Display incomplete tasks
+                          if (incompleteTasks.isNotEmpty)
+                            Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Padding(
+                                  padding: const EdgeInsets.only(left: 18.0),
+                                  child: Text('Tasks for Today',style: TextStyle(
+                                      fontSize: 18,
+                                      fontWeight: FontWeight.bold),),
+                                ),
+                                SizedBox(height: 8),
+                                ListView.builder(
+physics: NeverScrollableScrollPhysics(),
+                                  shrinkWrap: true,
+                                  itemCount: incompleteTasks.length,
+                                  itemBuilder: (context, index) {
+                                    Map<String, dynamic> task =
+                                    incompleteTasks[index];
+                                    bool isPermanent = task['isPermanent'];
+                                    bool isChecked = task['isChecked'] ?? false;
 
-                                  return Padding(
-                                    padding: const EdgeInsets.all(8.0),
-                                    child: Container(
-                                      decoration: BoxDecoration(
-                                        borderRadius: BorderRadius.circular(15),
-                                        color: isPermanent
-                                            ? Color(0xffff914d).withOpacity(0.5)
-                                            : Colors.grey[300],
+                                    return Padding(
+                                      padding: const EdgeInsets.all(8.0),
+                                      child: Container(
+                                        decoration: BoxDecoration(
+                                          borderRadius: BorderRadius.circular(15),
+                                          color: isPermanent
+                                              ? Color(0xffff914d).withOpacity(0.5)
+                                              : Colors.grey[300],
+                                        ),
+                                        child: CheckboxListTile(
+                                          title: Text(task['title']),
+                                          subtitle:
+                                          Text('${task['startTime']} - ${task['endTime']}'),
+                                          value: isChecked,
+                                          onChanged: (value) async {
+                                          await  markTaskCompleted(task, value!);
+                                            setState(() {
+                                              task['isChecked'] = value;
+                                              if (value!) {
+                                                playSound();
+
+                                                // await updateFirestore(currentDay,task, value!);
+                                              }
+                                            });
+                                          },
+                                          activeColor: isPermanent
+                                              ? Color.fromRGBO(247, 181, 147, 0.8)
+
+                                          : Color.fromRGBO(173, 237, 175, 1),
+                                          controlAffinity:
+                                          ListTileControlAffinity.leading,
+                                        ),
                                       ),
-                                      child: CheckboxListTile(
-                                        title: Text(task['title']),
-                                        subtitle:
-                                        Text('${task['startTime']} - ${task['endTime']}'),
-                                        value: isChecked,
-                                        onChanged: (value) async {
-                                        await  markTaskCompleted(task, value!);
-                                          setState(() {
-                                            task['isChecked'] = value;
+                                    );
+                                  },
+                                ),
+                              ],
+                            ),
+
+                          // Display completed tasks
+                          if (completedTasks.isNotEmpty)
+                            Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                SizedBox(height: 16),
+                                Padding(
+                                  padding: const EdgeInsets.only(left: 18.0),
+                                  child: Text('Completed',
+                                      style: TextStyle(
+                                          fontSize: 18,
+                                          fontWeight: FontWeight.bold)),
+                                ),
+                                SizedBox(height: 8),
+                                ListView.builder(
+                                  shrinkWrap: true,
+                                  itemCount: completedTasks.length,
+                                  itemBuilder: (context, index) {
+                                    Map<String, dynamic> task =
+                                    completedTasks[index];
+                                    bool isPermanent = task['isPermanent'];
+                                    bool isChecked = task['isChecked'] ?? false;
+                                    return Padding(
+                                      padding: const EdgeInsets.all(8.0),
+                                      child: Container(
+                                        decoration: BoxDecoration(
+                                          borderRadius: BorderRadius.circular(15),
+                                          color:Color(0xff7ed957).withOpacity(0.5),
+                                        ),
+                                        child: CheckboxListTile(
+                                          title: Text(task['title'],
+                                              style: TextStyle(
+                                                  decoration:
+                                                  TextDecoration.lineThrough)),
+                                          subtitle:
+                                          Text('${task['startTime']} - ${task['endTime']}'),
+                                          value: isChecked,
+                                          onChanged: (value) async {
+                                            await  markTaskCompleted(task, value!);
                                             if (value!) {
                                               playSound();
-
+                                            } else {
                                               // await updateFirestore(currentDay,task, value!);
                                             }
-                                          });
-                                        },
-                                        activeColor: isPermanent
-                                            ? Color.fromRGBO(247, 181, 147, 0.8)
+                                            setState(() {
+                                              task['isChecked'] = value;
 
-                                        : Color.fromRGBO(173, 237, 175, 1),
-                                        controlAffinity:
-                                        ListTileControlAffinity.leading,
+
+                                            });
+                                          },
+                                          activeColor: isPermanent
+                                              ? Colors.red[200]
+                                              : Color(0xff7ed957),
+                                          controlAffinity:
+                                          ListTileControlAffinity.leading,
+                                        ),
                                       ),
-                                    ),
-                                  );
-                                },
-                              ),
-                            ],
-                          ),
-
-                        // Display completed tasks
-                        if (completedTasks.isNotEmpty)
-                          Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              SizedBox(height: 16),
-                              Padding(
-                                padding: const EdgeInsets.only(left: 18.0),
-                                child: Text('Completed',
-                                    style: TextStyle(
-                                        fontSize: 18,
-                                        fontWeight: FontWeight.bold)),
-                              ),
-                              SizedBox(height: 8),
-                              ListView.builder(
-                                shrinkWrap: true,
-                                itemCount: completedTasks.length,
-                                itemBuilder: (context, index) {
-                                  Map<String, dynamic> task =
-                                  completedTasks[index];
-                                  bool isPermanent = task['isPermanent'];
-                                  bool isChecked = task['isChecked'] ?? false;
-                                  return Padding(
-                                    padding: const EdgeInsets.all(8.0),
-                                    child: Container(
-                                      decoration: BoxDecoration(
-                                        borderRadius: BorderRadius.circular(15),
-                                        color:Color(0xff7ed957).withOpacity(0.5),
-                                      ),
-                                      child: CheckboxListTile(
-                                        title: Text(task['title'],
-                                            style: TextStyle(
-                                                decoration:
-                                                TextDecoration.lineThrough)),
-                                        subtitle:
-                                        Text('${task['startTime']} - ${task['endTime']}'),
-                                        value: isChecked,
-                                        onChanged: (value) async {
-                                          await  markTaskCompleted(task, value!);
-                                          if (value!) {
-                                            playSound();
-                                          } else {
-                                            // await updateFirestore(currentDay,task, value!);
-                                          }
-                                          setState(() {
-                                            task['isChecked'] = value;
-
-
-                                          });
-                                        },
-                                        activeColor: isPermanent
-                                            ? Colors.red[200]
-                                            : Color(0xff7ed957),
-                                        controlAffinity:
-                                        ListTileControlAffinity.leading,
-                                      ),
-                                    ),
-                                  );
-                                },
-                              ),
-                            ],
-                          ),
-                      ],
+                                    );
+                                  },
+                                ),
+                              ],
+                            ),
+                        ],
+                      ),
                     ),
                   ),
                 ],
@@ -393,8 +401,15 @@ class _TaskListViewState extends State<TaskListView> {
               child: HeaderL(),
             ),
             backgroundColor: Colors.white,
-            body: Center(
-              child:Text('No tasks for today'),
+            body:  WillPopScope(
+              onWillPop: () async {
+                // Navigate back to the home page
+                Navigator.push(context, MaterialPageRoute(builder: (context) =>BottomNavigation( 1)));
+                return false; // Do not allow the default back button behavior
+              },
+              child: Center(
+                child:Text('No tasks for today'),
+              ),
             ),
           ),
         );

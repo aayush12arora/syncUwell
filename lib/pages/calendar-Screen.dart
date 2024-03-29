@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:syncuwell/Navigator/bottom_navigation.dart';
 import 'package:syncuwell/models/timetable.dart';
 import 'package:table_calendar/table_calendar.dart';
 
@@ -58,48 +59,55 @@ class _TimetableCalendarScreenState extends State<TimetableCalendarScreen> {
       appBar: AppBar(
         title: Text('Timetable Calendar'),
       ),
-      body: Column(
-        children: [
-          TableCalendar(
-            firstDay: DateTime.utc(2024, 1, 1),
-            lastDay: DateTime.utc(2024, 12, 31),
-            focusedDay: _focusedDay,
-            calendarFormat: _calendarFormat,
-            onFormatChanged: (format) {
-              setState(() {
-                _calendarFormat = format;
-              });
-            },
-            onPageChanged: (focusedDay) {
-              setState(() {
-                _focusedDay = focusedDay;
-              });
-            },
-            onDaySelected: (selectedDay, focusedDay) {
-              setState(() {
-                _selectedDay = selectedDay;
-                convertData();
-              });
-            },
-            selectedDayPredicate: (day) {
-              // This determines if a day is selected or not
-              return isSameDay(day, _selectedDay);
-            },
-            calendarStyle: CalendarStyle(
-              todayDecoration: BoxDecoration(
-                color: Color(0xffff914d), // Color for today's date
-                shape: BoxShape.circle,
-              ),
-              selectedDecoration: BoxDecoration(
-                color: Colors.blue, // Color for the selected date
-                shape: BoxShape.circle,
+      body: WillPopScope(
+        onWillPop: () async {
+          // Navigate back to the home page
+          Navigator.push(context, MaterialPageRoute(builder: (context) =>BottomNavigation( 1)));
+          return false; // Do not allow the default back button behavior
+        },
+        child: Column(
+          children: [
+            TableCalendar(
+              firstDay: DateTime.utc(2024, 1, 1),
+              lastDay: DateTime.utc(2024, 12, 31),
+              focusedDay: _focusedDay,
+              calendarFormat: _calendarFormat,
+              onFormatChanged: (format) {
+                setState(() {
+                  _calendarFormat = format;
+                });
+              },
+              onPageChanged: (focusedDay) {
+                setState(() {
+                  _focusedDay = focusedDay;
+                });
+              },
+              onDaySelected: (selectedDay, focusedDay) {
+                setState(() {
+                  _selectedDay = selectedDay;
+                  convertData();
+                });
+              },
+              selectedDayPredicate: (day) {
+                // This determines if a day is selected or not
+                return isSameDay(day, _selectedDay);
+              },
+              calendarStyle: CalendarStyle(
+                todayDecoration: BoxDecoration(
+                  color: Color(0xffff914d), // Color for today's date
+                  shape: BoxShape.circle,
+                ),
+                selectedDecoration: BoxDecoration(
+                  color: Colors.blue, // Color for the selected date
+                  shape: BoxShape.circle,
+                ),
               ),
             ),
-          ),
-          Expanded(
-            child: _buildTimetable(),
-          ),
-        ],
+            Expanded(
+              child: _buildTimetable(),
+            ),
+          ],
+        ),
       ),
     );
   }

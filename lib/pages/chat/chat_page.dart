@@ -4,7 +4,9 @@ import 'package:chat_gpt_sdk/chat_gpt_sdk.dart';
 import 'package:dash_chat_2/dash_chat_2.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:syncuwell/Navigator/bottom_navigation.dart';
 import 'package:syncuwell/const.dart';
+import 'package:syncuwell/pages/Home/homepage.dart';
 
 import '../../Utils/headerfile.dart';
 
@@ -19,8 +21,9 @@ class _ChatPageState extends State<ChatPage> {
   String example =
       " ";
   late OpenAI openAI;
-
-
+  late SharedPreferences prefs;
+  late String chatHistoryKey ;
+bool er= false;
   // Function to get  current day of the week
   String getCurrentDay() {
     DateTime now = DateTime.now();
@@ -46,9 +49,21 @@ class _ChatPageState extends State<ChatPage> {
     }
   }
 
+  Future<void> initializeSharedPreferences() async {
+    prefs = await SharedPreferences.getInstance();
+    chatHistoryKey = 'chat_history_${DateTime.now().toString().substring(0, 10)}';
+    getTimetableFromLocalStorage();
+  }
+
+  Future<void> saveChatHistory() async {
+    // Convert messages to JSON and save to SharedPreferences
+    List<Map<String, dynamic>> messagesJson =
+    messages.map((message) => message.toJson()).toList();
+    await prefs.setString(chatHistoryKey, json.encode(messagesJson));
+  }
 
 
-  Future<String?> getTimetableFromLocalStorage() async {
+  Future<void> getTimetableFromLocalStorage() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     String? timetableDataString = prefs.getString('timetable_data');
 
@@ -60,7 +75,7 @@ class _ChatPageState extends State<ChatPage> {
         "Please use this information to answer my questions about today's schedule or any other day's schedule as asked. "
         "If there is no timetable for today, kindly inform me."
         "For permanent entries, I want to keep them fixed , I cannot do any other activity during that entry time so dont suggest this time for any other activity. \n"
-    "For non-permanent entries, I can do other activities during that entry time."
+    "For non-permanent entries, I can do other activities during that entry time. If no activity is specified, I assume I am free during that time. \n"
         "Other than specified entry times, I am free all day, and I assume I sleep from 23:00 to 7:00."
         "If no timetable is provided, reply that I should go to the profile section and add the timetable there.";
 
@@ -68,10 +83,17 @@ class _ChatPageState extends State<ChatPage> {
     //print('example $example');
     if (timetableDataString != null && timetableDataString.isNotEmpty) {
       Map<String, dynamic> timetableData = json.decode(timetableDataString);
-      return timetableDataString;
-    } else {
 
-      return ''; // or handle it according to your use case
+    } else {
+      print('No timetable data found in SharedPreferences. Please add timetable data in the profile section.');
+      // or handle it according to your use case
+    }
+    String? chatHistoryJson = prefs.getString(chatHistoryKey);
+    if (chatHistoryJson != null && chatHistoryJson.isNotEmpty) {
+      List<dynamic> chatMessages = json.decode(chatHistoryJson);
+      setState(() {
+        messages = chatMessages.map((message) => ChatMessage.fromJson(message)).toList();
+      });
     }
   }
 
@@ -85,9 +107,18 @@ class _ChatPageState extends State<ChatPage> {
     );
 
     // Load the timetable data from SharedPreferences
+    initializeSharedPreferences();
     getTimetableFromLocalStorage();
 
   }
+
+  @override
+  void dispose() {
+    saveChatHistory(); // Save chat history before disposing the widget
+    super.dispose();
+  }
+
+
 
   List<ChatMessage> messages = <ChatMessage>[];
   final ChatUser chatUser = ChatUser(firstName: 'Bob', id: '1');
@@ -105,20 +136,31 @@ class _ChatPageState extends State<ChatPage> {
           preferredSize: Size(screenSize.width, 75),
           child: HeaderL(),
         ),
-        body: DashChat(
+        body:
 
-          currentUser: chatUser,
-          onSend: (ChatMessage m) {
-            getChatResponse(m, false);
+
+        WillPopScope(
+          onWillPop: () async {
+            // Navigate back to the home page
+            Navigator.push(context, MaterialPageRoute(builder: (context) =>BottomNavigation( 1)));
+            return false; // Do not allow the default back button behavior
           },
+          child: er?
+              Center(child: Text('Something went wrong please refresh the page',style: TextStyle(color: Colors.redAccent),),):DashChat(
+
+            currentUser: chatUser,
+            onSend: (ChatMessage m) {
+              getChatResponse(m, false);
+            },
 messageOptions: MessageOptions(
   containerColor: Colors.white,
   currentUserContainerColor:Color(0xffff914d).withOpacity(0.5)
 ),
-          messages: messages,
-          typingUsers: typingUsers,
+            messages: messages,
+            typingUsers: typingUsers,
 
 
+          ),
         ),
       ),
     );
@@ -149,27 +191,40 @@ messageOptions: MessageOptions(
       messages: _messageHistory,
       maxToken: 500,
     );
-    final response = await openAI.onChatCompletion(request: request);
+ er= false;
+    try{
+      final response = await openAI.onChatCompletion(request: request);
+      for (var element in response!.choices) {
 
-    for (var element in response!.choices) {
-      if (element.message != null) {
-        if (!initial) {
-          setState(() {
-            messages.insert(
-              0,
-              ChatMessage(
-                text: element.message!.content,
-                user: syncUwell,
-                createdAt: DateTime.now(),
-              ),
-            );
-          });
+        if (element.message != null) {
+          if (!initial) {
+            setState(() {
+              messages.insert(
+                0,
+                ChatMessage(
+                  text: element.message!.content,
+                  user: syncUwell,
+                  createdAt: DateTime.now(),
+                ),
+              );
+            });
+          }
         }
       }
+
+      setState(() {
+        typingUsers.remove(syncUwell);
+      });
+    }catch(e){
+      setState(() {
+        messages.removeAt(0);
+
+        er= true;
+      });
+
     }
 
-    setState(() {
-      typingUsers.remove(syncUwell);
-    });
+
+
   }
 }

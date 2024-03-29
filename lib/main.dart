@@ -3,6 +3,7 @@ import 'dart:convert';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter_timezone/flutter_timezone.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:syncuwell/Services/notifications_service.dart';
 import 'package:syncuwell/pages/TimeTable/time-tablecontroller.dart';
 import 'package:syncuwell/pages/profile/profile_page.dart';
@@ -78,6 +79,15 @@ Future<void> main() async {
   runApp(const MyApp());
 }
 
+void displayGoodMessage() {
+  Fluttertoast.showToast(
+    msg: 'Welcome to Our App! We hope you have a great experience.',
+    toastLength: Toast.LENGTH_LONG,
+    gravity: ToastGravity.BOTTOM,
+    backgroundColor: Colors.grey[600],
+    textColor: Colors.white,
+  );
+}
 
 Future<void> onSelectNotification(String? payload) async {
   String? screenToOpen = payload;
@@ -168,7 +178,7 @@ DateTime convertStringToDateTime(String timeString) {
   int minute = int.parse(timeParts[1]);
  DateTime scheduledTime = DateTime(now.year, now.month, now.day, hour, minute-10);
  if(scheduledTime.isBefore(now)) {
-   scheduledTime = scheduledTime.add(Duration(days: 1));
+   scheduledTime = scheduledTime.add(Duration(days: 7));
  }
   // Create a new DateTime object with the target date and the specified time
   return scheduledTime;
@@ -185,7 +195,7 @@ Future<void> scheduleNotificationsForUpcomingTasks() async {
 
   // Iterate through the upcoming days in the week
   //for (int i = currentDayIndex; i <= 7; i++) {
-    String day = days[currentDayIndex];
+    String day = days[currentDayIndex%6];
 
     // Retrieve tasks for the current day
   List<Map<String, dynamic>> tasksForDay = [];
@@ -400,8 +410,8 @@ class MyApp extends StatelessWidget {
       openAppSettings();
     }
   }
-  // This widget is the root of your application.
 
+  // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
     Color myHexColor = Color(0xffff914d);
