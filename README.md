@@ -4,7 +4,11 @@
  <a href="https://freeimage.host/i/JNqHBOF"><img src="https://iili.io/JNqHBOF.md.png" alt="SyncUwell Logo" width="200" height="210"></a>
 </p>
 
+## Overview
 SyncUwell is a robust platform developed using Flutter and Firebase, designed to support students in maintaining their mental health and academic performance. With a focus on personalized tools and features, SyncUwell offers a comprehensive solution to enhance well-being and productivity.
+
+## Link to Download App
+https://drive.google.com/file/d/1hJ7mFn0K7-jhDQJfr9KjZnOag3Mc1QW2/view?usp=drive_link
 
 ## Features
 
@@ -26,8 +30,6 @@ SyncUwell is a robust platform developed using Flutter and Firebase, designed to
 
 - **Attendance Records:** Keep track of attendance for classes or events, ensuring you stay on top of your commitments.
 
-## Planned Enhancements
-
 - **Stress-Free Tips:** Additional resources and tips to further reduce stress and enhance mental well-being.
 
 - **Personalized Insights:** Deliver personalized insights based on user data for tailored recommendations.
@@ -44,11 +46,24 @@ SyncUwell is a robust platform developed using Flutter and Firebase, designed to
 
 ## Screenshots (Optional)
 
-Include screenshots of the application to showcase its interface and features.
+<div style="white-space: nowrap; overflow-x: auto; overflow-y: hidden; width: 100%; display: inline-block;">
+   <img src="https://iili.io/JNqdiiJ.md.jpg" alt="Screenshot 1" style="width: 15%; height: 30%; margin-right: 20px; display: inline-block;">-
+    <img src="https://iili.io/JNq2qRS.md.jpg" alt="Screenshot 2" style="width: 15%; height: 30%; margin-right: 20px; display: inline-block;">-
+    <img src="https://iili.io/JoWu2vS.md.jpg" alt="Screenshot 3" style="width: 15%; height: 30%; margin-right: 20px; display: inline-block;">
+   <img src="https://iili.io/JoWuCCb.md.jpg" alt="Screenshot 4" style="width: 15%; height: 30%; margin-right: 20px; display: inline-block;">
+  <img src="https://iili.io/JoWanMF.md.jpg" alt="Screenshot 5" style="width: 15%; height: 30%;margin-right: 20px; display: inline-block;">
+    <img src="https://iili.io/JoWaKuV.md.jpg" alt="Screenshot 6" style="width: 15%; height: 30%; margin-right: 20px; display: inline-block;">
+     <img src="https://iili.io/JoWaqZP.md.jpg" alt="Screenshot 7" style="width: 15%; height: 30%; margin-right: 20px; display: inline-block;">
+     <img src="https://iili.io/JoWafwB.md.jpg" alt="Screenshot 8" style="width: 15%; height: 30%; margin-right: 20px; display: inline-block;">
+    <img src="https://iili.io/JoWaCn1.md.jpg" alt="Screenshot 9" style="width: 15%; height: 30%; margin-right: 20px; display: inline-block;">
+       <img src="https://iili.io/JoWufje.md.jpg" alt="Screenshot 10" style="width: 15%; height: 30%; margin-right: 20px; display: inline-block;">
+     <img src="https://iili.io/JoWuKu9.md.jpg" alt="Screenshot 11" style="width: 15%; height: 30%; margin-right: 20px; display: inline-block;">
 
 ## Installation
 
-Provide instructions for installing and running the application locally, if applicable.
+1. Clone the repository.
+2. Set up the Flutter environment for the Flutter app.
+3. Configure Firebase authentication and storage.
 
 ## Usage
 
