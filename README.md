@@ -49,15 +49,15 @@ https://drive.google.com/file/d/1hJ7mFn0K7-jhDQJfr9KjZnOag3Mc1QW2/view?usp=drive
 <div style="white-space: nowrap; overflow-x: auto; overflow-y: hidden; width: 100%; display: inline-block;">
    <img src="https://iili.io/JNqdiiJ.md.jpg" alt="Screenshot 1" style="width: 15%; height: 30%; margin-right: 20px; display: inline-block;">-
     <img src="https://iili.io/JNq2qRS.md.jpg" alt="Screenshot 2" style="width: 15%; height: 30%; margin-right: 20px; display: inline-block;">-
-    <img src="https://iili.io/JoWu2vS.md.jpg" alt="Screenshot 3" style="width: 15%; height: 30%; margin-right: 20px; display: inline-block;">
-   <img src="https://iili.io/JoWuCCb.md.jpg" alt="Screenshot 4" style="width: 15%; height: 30%; margin-right: 20px; display: inline-block;">
-  <img src="https://iili.io/JoWanMF.md.jpg" alt="Screenshot 5" style="width: 15%; height: 30%;margin-right: 20px; display: inline-block;">
-    <img src="https://iili.io/JoWaKuV.md.jpg" alt="Screenshot 6" style="width: 15%; height: 30%; margin-right: 20px; display: inline-block;">
-     <img src="https://iili.io/JoWaqZP.md.jpg" alt="Screenshot 7" style="width: 15%; height: 30%; margin-right: 20px; display: inline-block;">
-     <img src="https://iili.io/JoWafwB.md.jpg" alt="Screenshot 8" style="width: 15%; height: 30%; margin-right: 20px; display: inline-block;">
-    <img src="https://iili.io/JoWaCn1.md.jpg" alt="Screenshot 9" style="width: 15%; height: 30%; margin-right: 20px; display: inline-block;">
-       <img src="https://iili.io/JoWufje.md.jpg" alt="Screenshot 10" style="width: 15%; height: 30%; margin-right: 20px; display: inline-block;">
-     <img src="https://iili.io/JoWuKu9.md.jpg" alt="Screenshot 11" style="width: 15%; height: 30%; margin-right: 20px; display: inline-block;">
+    <img src="https://iili.io/JNq3n7p.md.jpg" alt="Screenshot 3" style="width: 15%; height: 30%; margin-right: 20px; display: inline-block;">-
+   <img src="https://iili.io/JNq3RBs.md.jpg" alt="Screenshot 4" style="width: 15%; height: 30%; margin-right: 20px; display: inline-block;">-
+  <img src="https://iili.io/JNq3cYl.md.jpg" alt="Screenshot 5" style="width: 15%; height: 30%;margin-right: 20px; display: inline-block;">-
+    <img src="https://iili.io/JNq3w3x.md.jpg" alt="Screenshot 6" style="width: 15%; height: 30%; margin-right: 20px; display: inline-block;">-
+     <img src="https://iili.io/JNq38j1.md.jpg" alt="Screenshot 7" style="width: 15%; height: 30%; margin-right: 20px; display: inline-block;">-
+     <img src="https://iili.io/JNqFI8Q.md.jpg" alt="Screenshot 8" style="width: 15%; height: 30%; margin-right: 20px; display: inline-block;">-
+    <img src="https://iili.io/JNqFjoX.md.jpg" alt="Screenshot 9" style="width: 15%; height: 30%; margin-right: 20px; display: inline-block;">-
+       <img src="https://iili.io/JNqFUR2.md.jpg" alt="Screenshot 10" style="width: 15%; height: 30%; margin-right: 20px; display: inline-block;">-
+     <img src="https://iili.io/JNqFLKb.md.jpg" alt="Screenshot 11" style="width: 15%; height: 30%; margin-right: 20px; display: inline-block;">-
 
 ## Installation
 
