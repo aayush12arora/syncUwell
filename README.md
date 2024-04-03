@@ -1,9 +1,7 @@
 # SyncUwell
 
 <p align="center">
-  <a href="https://freeimage.host/" target="_blank">
-    <img src="https://freeimage.host/i/JNqHBOF" alt="ASUR Logo" width="200" height="210"/>
-  </a>
+ <a href="https://freeimage.host/i/JNqHBOF"><img src="https://iili.io/JNqHBOF.md.png" alt="SyncUwell Logo" width="200" height="210"></a>
 </p>
 
 SyncUwell is a robust platform developed using Flutter and Firebase, designed to support students in maintaining their mental health and academic performance. With a focus on personalized tools and features, SyncUwell offers a comprehensive solution to enhance well-being and productivity.
