@@ -42,7 +42,7 @@ https://drive.google.com/file/d/1hJ7mFn0K7-jhDQJfr9KjZnOag3Mc1QW2/view?usp=drive
 
 - **Firebase:** A comprehensive platform offering various services like authentication, real-time database, and cloud storage for seamless app development.
 
-- **Next.js:** Although not explicitly mentioned in the project description, Next.js can be integrated for web application development if required.
+
 
 ## Screenshots (Optional)
 
@@ -62,6 +62,8 @@ https://drive.google.com/file/d/1hJ7mFn0K7-jhDQJfr9KjZnOag3Mc1QW2/view?usp=drive
    <img src="https://iili.io/JNqKzsn.md.jpg" alt="Screenshot 13" style="width: 15%; height: 30%; margin-right: 20px; display: inline-block;">-
    <img src="https://iili.io/JNqKQLX.md.jpg" alt="Screenshot 14" style="width: 15%; height: 30%; margin-right: 20px; display: inline-block;">-
    <img src="https://iili.io/JNqKp2f.md.jpg" alt="Screenshot 15" style="width: 15%; height: 30%; margin-right: 20px; display: inline-block;">
+
+ 
 ## Installation
 
 1. Clone the repository.
