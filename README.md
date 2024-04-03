@@ -58,7 +58,10 @@ https://drive.google.com/file/d/1hJ7mFn0K7-jhDQJfr9KjZnOag3Mc1QW2/view?usp=drive
     <img src="https://iili.io/JNqFjoX.md.jpg" alt="Screenshot 9" style="width: 15%; height: 30%; margin-right: 20px; display: inline-block;">-
        <img src="https://iili.io/JNqFUR2.md.jpg" alt="Screenshot 10" style="width: 15%; height: 30%; margin-right: 20px; display: inline-block;">-
      <img src="https://iili.io/JNqFLKb.md.jpg" alt="Screenshot 11" style="width: 15%; height: 30%; margin-right: 20px; display: inline-block;">-
-
+  <img src="https://iili.io/JNqKCbI.md.jpg" alt="Screenshot 12" style="width: 15%; height: 30%; margin-right: 20px; display: inline-block;">-
+   <img src="https://iili.io/JNqKzsn.md.jpg" alt="Screenshot 13" style="width: 15%; height: 30%; margin-right: 20px; display: inline-block;">-
+   <img src="https://iili.io/JNqKQLX.md.jpg" alt="Screenshot 14" style="width: 15%; height: 30%; margin-right: 20px; display: inline-block;">-
+   <img src="https://iili.io/JNqKp2f.md.jpg" alt="Screenshot 15" style="width: 15%; height: 30%; margin-right: 20px; display: inline-block;">
 ## Installation
 
 1. Clone the repository.
@@ -67,11 +70,19 @@ https://drive.google.com/file/d/1hJ7mFn0K7-jhDQJfr9KjZnOag3Mc1QW2/view?usp=drive
 
 ## Usage
 
-Guide users on how to use the application effectively to maximize its benefits.
+1. **Register/Login:** Begin by registering for a new account or logging in with existing credentials to access SyncUwell's features.
 
-## Contribution
+2. **Customize Timetable:** Personalize your timetable by adding classes, study sessions, and other commitments to better manage your time.
 
-Outline guidelines for contributing to the project, including code standards and submission process.
+3. **Set Reminders:** Ensure you stay on track by setting up notification reminders for important tasks, assignments, and events.
+
+4. **Engage AI Chatbot:** Interact with the AI chatbot to receive personalized support, guidance on stress management, productivity tips, and answers to your questions.
+
+
+## Contributors
+
+- # Aayush Arora - Flutter Application
+- Feel free to contribute and improve the syncUwell Platform
 
 ## License
 
