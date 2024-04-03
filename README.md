@@ -86,6 +86,4 @@ https://drive.google.com/file/d/1hJ7mFn0K7-jhDQJfr9KjZnOag3Mc1QW2/view?usp=drive
 - # Aayush Arora - Flutter Application
 - Feel free to contribute and improve the syncUwell Platform
 
-## License
 
-Specify the license under which the project is distributed.
