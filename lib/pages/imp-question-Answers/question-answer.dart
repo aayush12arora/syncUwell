@@ -9,14 +9,15 @@ class Flashcard {
   final String question;
   final String answer;
   final String tag;
-
-  Flashcard({required this.id, required this.question, required this.answer, required this.tag});
+  final String courseId;
+  Flashcard( {required this.id, required this.question, required this.answer, required this.tag, required this.courseId});
 
   Map<String, dynamic> toMap() {
     return {
       'question': question,
       'answer': answer,
       'tag': tag,
+      'courseId': courseId,
     };
   }
 
@@ -26,6 +27,7 @@ class Flashcard {
       question: map['question'],
       answer: map['answer'],
       tag: map['tag'],
+      courseId: map['courseId'],
     );
   }
 }
@@ -39,11 +41,35 @@ class FlashcardService {
 
   Future<void> addFlashcard(String courseId, Flashcard flashcard) async {
     try {
+      String? uid = await getUID();
+      final flash = flashcard.toMap();
+
+
+      await _firestore
+          .collection('courses').doc(uid).collection('flashcards')
+        .add(flash);
+
+
+    } catch (e) {
+      print('Error adding flashcard: $e');
+      throw e;
+    }
+  }
+
+
+  Future<void> addSubject(String courseId) async {
+    try {
+
+      List<dynamic>subjects = await getCourseList();
+      subjects.add(courseId);
+      String? uid = await getUID();
+     // subjects.add(courseId);
+      // Update the Firestore document with the updated list of subjects
+
       await _firestore
           .collection('courses')
-          .doc(courseId)
-          .collection('flashcards')
-          .add(flashcard.toMap());
+          .doc(uid)
+          .update({'subjects': subjects});
     } catch (e) {
       print('Error adding flashcard: $e');
       throw e;
@@ -52,7 +78,12 @@ class FlashcardService {
 
   Future<List<Flashcard>> getFlashcards(String courseId, String? tag) async {
     try {
-      Query query = _firestore.collection('courses').doc(courseId).collection('flashcards');
+      String? uid = await getUID();
+      Query query = _firestore
+          .collection('courses')
+          .doc(uid)
+          .collection('flashcards')
+          .where('courseId', isEqualTo: courseId); // Ensure querying for the specific courseId
 
       if (tag != null) {
         query = query.where('tag', isEqualTo: tag);
@@ -67,11 +98,13 @@ class FlashcardService {
     }
   }
 
+
   Future<void> updateFlashcard(String courseId, Flashcard flashcard) async {
     try {
+      String? uid = await getUID();
       await _firestore
           .collection('courses')
-          .doc(courseId)
+          .doc(uid)
           .collection('flashcards')
           .doc(flashcard.id)
           .update(flashcard.toMap());
@@ -83,10 +116,13 @@ class FlashcardService {
 
   Future<int> getFlashcardsLength(String courseId) async {
     try {
-      final querySnapshot = await _firestore
+      String? uid = await getUID();
+      Query query = _firestore
           .collection('courses')
-          .doc(courseId)
+          .doc(uid)
           .collection('flashcards')
+          .where('courseId', isEqualTo: courseId);
+      final querySnapshot = await query
           .get();
 
       var list = querySnapshot.docs.map((doc) => Flashcard.fromMap(doc.id, doc.data() as Map<String, dynamic>)).toList();
@@ -103,10 +139,18 @@ class FlashcardService {
     try {
       final firestore = FirebaseFirestore.instance;
       String? uid = await getUID();
-      DocumentReference subjref = firestore.collection('Attend').doc(uid);
+      DocumentReference subjref = firestore.collection('courses').doc(uid);
+
 
       // Check if the document exists
       DocumentSnapshot subjectsSnapshot = await subjref.get();
+
+      bool documentExists = subjectsSnapshot.exists;
+
+      if (!documentExists) {
+        // If the document doesn't exist, create it with an empty subjects list
+        await subjref.set({'subjects': []});
+      }
       if (!subjectsSnapshot.exists) {
         // If the document doesn't exist, clear subjectData and return
         subjectData.clear();
@@ -356,7 +400,7 @@ class _EditFlashcardDialogState extends State<EditFlashcardDialog> {
                               disabledBorder: InputBorder.none,
                               contentPadding: EdgeInsets
                                   .zero, // Set contentPadding to zero
-                              hintText: "Whats the solutin to your question",
+                              hintText: "Whats the solution to your question",
                             ),
                           ),
                         ),
@@ -393,7 +437,7 @@ class _EditFlashcardDialogState extends State<EditFlashcardDialog> {
                               final question = _questionController.text.trim();
                               final answer = _answerController.text.trim();
                               if (question.isNotEmpty && answer.isNotEmpty) {
-                                final flashcard = Flashcard(id: widget.flashcardId, question: question, answer: answer, tag: _selectedTag!);
+                                final flashcard = Flashcard(id: widget.flashcardId, question: question, answer: answer, tag: _selectedTag!, courseId: widget.courseId);
                                 FlashcardService().updateFlashcard(widget.courseId, flashcard);
                                 widget.onCardUpdated!();
                                 Navigator.of(context).pop();
@@ -736,7 +780,7 @@ children: [
             final question = _questionController.text.trim();
             final answer = _answerController.text.trim();
             if (question.isNotEmpty && answer.isNotEmpty) {
-              final flashcard = Flashcard(id: '', question: question, answer: answer, tag: _selectedTag!);
+              final flashcard = Flashcard(id: '', question: question, answer: answer, tag: _selectedTag!, courseId: widget.courseId);
               FlashcardService().addFlashcard(widget.courseId, flashcard);
               widget.onCardAdded!();
               Navigator.of(context).pop();
@@ -810,6 +854,9 @@ class _FlashcardScreenState extends State<FlashcardScreen> {
   }
 
   Future<void> getData() async {
+    setState(() {
+      loading = true;
+    });
     cards = await FlashcardService().getFlashcards(widget.courseId, tag);
     if (tag != null) {
       cards = cards.where((card) => card.tag == tag).toList();
@@ -885,12 +932,38 @@ class _FlashcardScreenState extends State<FlashcardScreen> {
                                 ? Colors.greenAccent
                                 : Colors.grey,
                             borderRadius: BorderRadius.circular(25)),
-                        child: Center(
-                            child: Text(
-                              'Easy',
-                              style: TextStyle(
-                                  color: Colors.black, fontSize: 20),
-                            )),
+                        child: Stack(
+                          children: [
+                            tag == 'Easy'?
+                            Positioned(
+                              top: 1,
+                              left: 80,
+                              child: GestureDetector(
+                                onTap: () {
+                                  // Handle tap action for the cross icon
+                                  setState(() {
+                                    tag=null;
+                                    getData();
+                                  });
+                                },
+                                child: CircleAvatar(
+                                  radius: 8,
+                                  child: Icon(
+                                    Icons.clear,
+                                    color: Colors.black,
+                                    size: 10,
+                                  ),
+                                ),
+                              ),
+                            ):SizedBox.shrink(),
+                            Center(
+                                child: Text(
+                                  'Easy',
+                                  style: TextStyle(
+                                      color: Colors.black, fontSize: 20),
+                                )),
+                          ],
+                        ),
                       ),
                     ),
                     InkWell(
@@ -908,12 +981,38 @@ class _FlashcardScreenState extends State<FlashcardScreen> {
                                 ? Colors.orange
                                 : Colors.grey,
                             borderRadius: BorderRadius.circular(25)),
-                        child: Center(
-                            child: Text(
-                              'Medium',
-                              style: TextStyle(
-                                  color: Colors.black, fontSize: 20),
-                            )),
+                        child: Stack(
+                          children: [
+                            tag == 'Medium'?
+                            Positioned(
+                              top: 1,
+                              left: 80,
+                              child: GestureDetector(
+                                onTap: () {
+                                  // Handle tap action for the cross icon
+                                  setState(() {
+                                    tag=null;
+                                    getData();
+                                  });
+                                },
+                                child: CircleAvatar(
+                                  radius: 8,
+                                  child: Icon(
+                                    Icons.clear,
+                                    color: Colors.black,
+                                    size: 10,
+                                  ),
+                                ),
+                              ),
+                            ):SizedBox.shrink(),
+                            Center(
+                                child: Text(
+                                  'Medium',
+                                  style: TextStyle(
+                                      color: Colors.black, fontSize: 20),
+                                )),
+                          ],
+                        ),
                       ),
                     ),
                     InkWell(
@@ -931,12 +1030,38 @@ class _FlashcardScreenState extends State<FlashcardScreen> {
                                 ? Colors.redAccent
                                 : Colors.grey,
                             borderRadius: BorderRadius.circular(25)),
-                        child: Center(
-                            child: Text(
-                              'Hard',
-                              style: TextStyle(
-                                  color: Colors.black, fontSize: 20),
-                            )),
+                        child: Stack(
+                          children: [
+                            tag == 'Hard'?
+                            Positioned(
+                              top: 1,
+                              left: 80,
+                              child: GestureDetector(
+                                onTap: () {
+                                  // Handle tap action for the cross icon
+                                  setState(() {
+                                    tag=null;
+                                    getData();
+                                  });
+                                },
+                                child: CircleAvatar(
+                                  radius: 8,
+                                  child: Icon(
+                                    Icons.clear,
+                                    color: Colors.black,
+                                    size: 10,
+                                  ),
+                                ),
+                              ),
+                            ):SizedBox.shrink(),
+                            Center(
+                                child: Text(
+                                  'Hard',
+                                  style: TextStyle(
+                                      color: Colors.black, fontSize: 20),
+                                )),
+                          ],
+                        ),
                       ),
                     )
                   ],

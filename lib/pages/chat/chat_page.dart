@@ -142,6 +142,7 @@ bool er= false;
         WillPopScope(
           onWillPop: () async {
             // Navigate back to the home page
+            saveChatHistory();
             Navigator.push(context, MaterialPageRoute(builder: (context) =>BottomNavigation( 1)));
             return false; // Do not allow the default back button behavior
           },

@@ -28,6 +28,7 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
 bool loading = false;
+bool donepopUp= false;
   String? name ;
   String tiptoDisplay = "Welcome to Syncuwell";
   @override
@@ -38,7 +39,27 @@ bool loading = false;
   }
 
 
+Future<void> savepopUpShown( bool done) async {
+  // Save the timetable data map to SharedPreferences
+  SharedPreferences prefs = await SharedPreferences.getInstance();
+  String todayKey = DateFormat('dMMMyyyy').format(DateTime.now());
+  String sa= 'todo_tasks';
+  sa+= '_$todayKey';
+  prefs.setBool('${sa}popup', done);
 
+}
+
+
+
+Future<void> getpopupData() async {
+  SharedPreferences prefs = await SharedPreferences.getInstance();
+  String todayKey = DateFormat('dMMMyyyy').format(DateTime.now());
+  String sa= 'todo_tasks';
+  sa+= '_$todayKey';
+  donepopUp = prefs.getBool('${sa}popup') ?? false;
+
+
+}
 
   Future<void> getData() async {
 setState(() {
@@ -67,6 +88,8 @@ if (tipssnapshot.docs.isNotEmpty) {
   Map<String,dynamic> tipmap = randomtip.data() as Map<String, dynamic>;
   tiptoDisplay = tipmap['tip'];
 }
+
+await getpopupData();
     setState(() {
 loading= false;
     });
@@ -79,7 +102,7 @@ loading= false;
 
     'Personalized Planners',
    'Todo',
-    'Mark Attendance',
+
     'See Attendance',
     'Flash Cards'
   ];
@@ -90,7 +113,7 @@ loading= false;
     'timetable.png',
     '7-days.png',
     'list.png',
-    'Quiz.png',
+
     'people.png',
    'flash-cards.png'
 
@@ -173,14 +196,12 @@ bool _isPopupVisible = true;
                               Navigator.push(context, MaterialPageRoute(builder: (r)=>PlannerTimetableScreen()));
                             }
                             else if(index==4){
-                              Navigator.push(context, MaterialPageRoute(builder: (r)=>AttendanceScreen()));
-                            }
-                            else if(index==5){
                               Navigator.push(context, MaterialPageRoute(builder: (r)=>AllSubjectAttendancePage()));
                             }
-                            else if(index==6){
+                            else if(index==5){
                               Navigator.push(context, MaterialPageRoute(builder: (r)=>SelectSubject()));
                             }
+
                           },
                           child: GridItem(
                            assetName: assetname[index % _randomIcons.length],
@@ -239,6 +260,7 @@ margin: EdgeInsets.only(top:15,left: 2,right: 15) ,
                 ],
               ),
             ),
+            if(!donepopUp)
             if (_isPopupVisible) ...[
               // Blur and darken background
               Container(
@@ -251,6 +273,7 @@ margin: EdgeInsets.only(top:15,left: 2,right: 15) ,
                 ),
               ),
               // Popup message
+
               Positioned(
 top: screenSize.height * 0.425,
                 left: screenSize.width * 0.06,
@@ -261,6 +284,8 @@ top: screenSize.height * 0.425,
                   tiptoDisplay,
                   onClose: () {
                     setState(() {
+                      savepopUpShown(true);
+                      donepopUp=true;
                       _isPopupVisible = false;
                     });
                   },
